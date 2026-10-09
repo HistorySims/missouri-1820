@@ -24,6 +24,12 @@ h1,h2,h3,p{margin:0}
 #hud .ttl b{font-style:normal;font-weight:700}
 #hud .when{font-size:.98rem}
 #hud .when small{color:var(--ink2);margin-left:6px}
+.cal{display:flex;gap:2px;margin-top:3px;align-items:center}
+.cal .cd{width:20px;height:16px;font-size:.66rem;line-height:13px;text-align:center;border:1.5px solid var(--ink);border-radius:2px;background:#fbf5e2;font-variant-numeric:tabular-nums}
+.cal .cd.past{background:#d9cfb6;color:#8a7a60;text-decoration:line-through}
+.cal .cd.now{background:var(--ink);color:var(--card);font-weight:700}
+.cal .cd.end{margin-left:5px;border-color:var(--red);color:var(--red);font-weight:700;background:#f7dcd2}
+.cal .wk{width:4px}
 .pips{display:flex;gap:5px;align-items:center}
 .pip{width:15px;height:15px;border-radius:50%;border:2px solid var(--ink);background:var(--card2)}
 .pip.on{background:var(--red)}
@@ -66,6 +72,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:8px;align-items:
 .rctabs{display:flex;gap:6px;flex-wrap:wrap}
 .rctab{background:var(--card2);border:2px solid var(--ink);border-radius:5px;padding:3px 10px;font-size:.93rem}
 .rctab.on{background:var(--ink);color:var(--card)}
+.rctab .rcn{margin-left:7px;font-size:.8rem;font-variant-numeric:tabular-nums;opacity:.85}
+.rctab .rcn.ok::after{content:" \2713"}
 .tbar{position:relative;height:20px;border:2px solid var(--ink);border-radius:4px;display:flex;overflow:hidden;background:#d9cfb6}
 .tbar i{display:block;height:100%;transition:width .8s ease}
 .tbar .need{position:absolute;top:-3px;bottom:-3px;width:0;border-left:3px solid var(--ink)}
@@ -157,6 +165,18 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:8px;align-items:
 .verdict{min-height:1.6em;font-size:1.15rem;font-style:italic}
 .verdict.pass{color:var(--green)}.verdict.fail{color:var(--red)}
 .needline{font-size:.92rem;color:var(--ink2)}
+.vrace{position:relative;height:16px;border:2px solid var(--ink);border-radius:4px;background:#e6dcc3;overflow:hidden}
+.vrace i{position:absolute;top:0;bottom:0;display:block}
+.vrace .ya{left:0;width:0;background:var(--green)}
+.vrace .na{right:0;width:0;background:var(--red)}
+.vrace .nd{top:-2px;bottom:-2px;width:0;border-left:3px solid var(--ink)}
+.vbreak{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;font-size:.86rem;text-align:left;margin:2px 0 4px}
+.vbreak .bn{white-space:nowrap}
+.vbreak .bb{height:11px;border:1.5px solid var(--ink);border-radius:3px;display:flex;overflow:hidden;background:#e6dcc3}
+.vbreak .bb i{display:block;height:100%;width:0}
+.vbreak .bb .ya{background:var(--green)} .vbreak .bb .gap{flex:1} .vbreak .bb .na{background:var(--red)}
+.vbreak .bc{font-variant-numeric:tabular-nums;white-space:nowrap;min-width:3.4em;text-align:right}
+.spr.absent{opacity:.28}
 
 /* notes */
 .notes .cap{margin:10px 0 3px;font-weight:700}
@@ -169,6 +189,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:8px;align-items:
 #overlay.on{display:flex}
 .card{background:var(--card);border:3px solid var(--ink);border-radius:8px;max-width:560px;width:100%;padding:18px 20px;box-shadow:0 8px 30px rgba(0,0,0,.6);max-height:92vh;overflow:auto}
 .card h2{font-size:1.5rem;font-style:italic;margin-bottom:6px}
+.dayhead{display:flex;align-items:center;gap:14px;margin-bottom:4px}.dayhead h2{margin:0}
+.calpg{width:54px;height:61px;flex:0 0 auto}
 .card p{font-size:1.04rem;line-height:1.42;margin:8px 0}
 .card .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
 .card ul{margin:6px 0 6px 20px;padding:0}.card li{margin:4px 0;font-size:1rem;line-height:1.3}
@@ -204,6 +226,7 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:8px;align-items:
   .hbtn{padding:3px 8px;font-size:.8rem}
   #hud .when{font-size:.85rem}
   #hud .when small{display:block;margin:0;font-size:.72rem}
+  .cal{display:none}
   #hud .meters{justify-content:flex-end;gap:2px 10px}
   .hudlbl{display:none}
   #panel{padding:10px}
@@ -223,7 +246,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:8px;align-items:
 .scalebox.mapbox{padding:4px}
 .mapcap{font-size:.98rem;line-height:1.3;margin:6px 2px 4px;font-weight:700;color:#3d2b1a}
 .explain{background:#fbf5e2;border:2px solid var(--rule);border-radius:6px;padding:7px 10px;margin:4px 0 6px}
-.explain b{display:block;margin-bottom:2px}.explain p{margin:0;font-size:.93rem;line-height:1.38}
+.explain b{display:block;margin-bottom:2px}.explain p{margin:4px 0 0;font-size:.93rem;line-height:1.38}
+.explain summary{cursor:pointer;font-weight:700}
 .mapSvg{display:block}
 
 /* ---- story sequences ---- */
@@ -272,7 +296,7 @@ const CINEMA_HTML = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=
 /* =====================================================================
    MODEL: pure logic, no DOM. Everything the House "believes" lives here.
    ===================================================================== */
-const TOTAL_DAYS = 11, ACTIONS_PER_DAY = 2, START_FAVORS = 6;
+const TOTAL_DAYS = 11, ACTIONS_PER_DAY = 2, START_FAVORS = 6, FAIL_DAYS = 2, COMMITTEE_DAYS = 2;
 const DAYS = [
   {dow:"Monday",    date:"February 21"}, {dow:"Tuesday",   date:"February 22"},
   {dow:"Wednesday", date:"February 23"}, {dow:"Thursday",  date:"February 24"},
@@ -317,8 +341,7 @@ const OPTS = {
     {id:"alone",  label:"Maine joins on its own bill", sub:"Maine becomes a free state. Nothing else is in the bill.", tag:"floor"},
     {id:"joined", label:"Maine and Missouri in one bill", sub:"The Senate wants the two states tied together.", tag:"floor"},
     {id:"twin",   label:"Two bills, sent together", sub:"Maine gets one bill. Missouri gets another. Both go to the Senate as a pair.", tag:"idea", lock:true},
-    {id:"pledge", label:"Maine now, Missouri later", sub:"The House promises to admit Missouri later.", tag:"floated"},
-    {id:"extend", label:"Ask Massachusetts for more time", sub:"Massachusetts\u2019s permission for Maine ends on March 4.", tag:"floated"}
+    {id:"pledge", label:"Maine now, Missouri later", sub:"The House promises to admit Missouri later.", tag:"floated"}
   ],
   mo:[
     {id:"tallmadge", label:"No new enslaved people, and free their children at 25", sub:"Mr. Tallmadge\u2019s plan. The House passed it last year.", tag:"floor"},
@@ -326,9 +349,7 @@ const OPTS = {
     {id:"silent",    label:"Admit Missouri and say nothing about slavery", sub:"Missouri joins \u201con an equal footing\u201d with the other states.", tag:"floor"},
     {id:"open",      label:"Admit Missouri and say slavery is legal there", sub:"The bill says it in plain words.", tag:"floor"},
     {id:"gradual",   label:"Missouri must free people slowly, by its own law", sub:"Congress asks. Missouri decides how.", tag:"floated"},
-    {id:"vote",      label:"Missouri voters decide first", sub:"The voters choose on slavery. Then Missouri joins.", tag:"floated"},
-    {id:"census",    label:"Missouri waits for the 1830 census", sub:"Wait ten years, then decide.", tag:"floated"},
-    {id:"split",     label:"Split Missouri into two states", sub:"One free state and one slave state.", tag:"floated"}
+    {id:"vote",      label:"Missouri voters decide first", sub:"The voters choose on slavery. Then Missouri joins.", tag:"floated"}
   ],
   ln:[
     {id:"none",     label:"Say nothing about the rest of the Purchase", sub:"Missouri is the only question.", tag:"floor"},
@@ -356,7 +377,6 @@ const OPTS = {
     {id:"single",    label:"One vote on the whole bill", sub:"Everything passes or fails together.", tag:"floor"},
     {id:"divide",    label:"Divide the question", sub:"Each part gets its own vote.", tag:"floor"},
     {id:"late",      label:"Vote late at night", sub:"Older and sick members may go home.", tag:"floated"},
-    {id:"postpone",  label:"Delay the vote", sub:"Wait and hope things change.", tag:"floated"},
     {id:"committee", label:"Send it to a small committee", sub:"The committee looks for a compromise.", tag:"floated"}
   ]
 };
@@ -369,12 +389,12 @@ const billSig = b => [b.me, b.mo, b.ln, b.sw.slice().sort().join("+"), b.pr].joi
 
 /* ---------------- Preference tables (score units) ---------------- */
 const U_MO = {
-  R:{tallmadge: 3.0, ban: 2.4, silent:-2.6, open:-3.4, gradual: 1.4, vote:-0.8, census: 0.6, split: 0.0},
-  M:{tallmadge: 2.2, ban: 2.0, silent:-1.4, open:-2.2, gradual: 1.0, vote:-0.3, census: 0.5, split:-0.2},
-  C:{tallmadge: 1.8, ban: 1.5, silent:-2.2, open:-3.2, gradual: 0.7, vote:-0.6, census: 0.3, split:-0.5},
-  W:{tallmadge:-0.8, ban:-0.5, silent: 1.2, open: 1.0, gradual:-0.9, vote:-0.5, census:-1.6, split:-1.0},
-  B:{tallmadge:-1.6, ban:-1.2, silent: 1.4, open: 1.2, gradual:-1.5, vote: 0.0, census:-1.2, split:-1.4},
-  H:{tallmadge:-3.8, ban:-3.4, silent: 1.6, open: 2.4, gradual:-3.4, vote:-0.8, census:-1.6, split:-2.6}
+  R:{tallmadge: 3.0, ban: 2.4, silent:-2.6, open:-3.4, gradual: 1.4, vote:-0.8},
+  M:{tallmadge: 2.2, ban: 2.0, silent:-1.4, open:-2.2, gradual: 1.0, vote:-0.3},
+  C:{tallmadge: 1.8, ban: 1.5, silent:-2.2, open:-3.2, gradual: 0.7, vote:-0.6},
+  W:{tallmadge:-0.8, ban:-0.5, silent: 1.2, open: 1.0, gradual:-0.9, vote:-0.5},
+  B:{tallmadge:-1.6, ban:-1.2, silent: 1.4, open: 1.2, gradual:-1.5, vote: 0.0},
+  H:{tallmadge:-3.8, ban:-3.4, silent: 1.6, open: 2.4, gradual:-3.4, vote:-0.8}
 };
 const U_LN = {
   R:{none:0, "40": 0.5, sunset: 1.2, "3630": 2.0, pacific: 2.4, arkansas: 2.8},
@@ -386,7 +406,7 @@ const U_LN = {
 };
 const U_ME = {R:3.2, M:2.6, C:2.6, W:1.6, B:0.2, H:-0.4};
 const ME_PAIR = {
-  alone:{}, extend:{},
+  alone:{},
   twin:  {B:0.8, H:1.0},
   pledge:{B:0.5, H:0.5}
 };
@@ -435,6 +455,9 @@ function makeMembers(seed){
    {extra:{bloc:{MO,LINE,ME}}, riderMult:{bloc:x}, hard:{bloc:x}} */
 const newMods = () => ({extra:{}, riderMult:{}, hard:{}});
 const getExtra = (mods, b, k) => ((mods.extra[b] || {})[k] || 0);
+const RESTRICTS_MO = {tallmadge:1, ban:1, gradual:1};
+/* Northern pressure (NORTH < 0) makes a vote to admit Missouri unrestricted harder, and a vote for a limit easier. */
+const northPressure = (mods, b, bill) => getExtra(mods, b, "NORTH") * (RESTRICTS_MO[bill.mo] ? -1 : 1);
 
 function riderSum(b, bill, mods){
   const i = BLOC_IDS.indexOf(b);
@@ -460,9 +483,9 @@ function compScore(b, comp, bill, mods, divided){
   const hard = (mods.hard[b] || 0);
   switch(comp){
     case "MO":
-      return U_MO[b][bill.mo] + coverMO(b, bill, divided) + riderSum(b, bill, mods) * 0.85 + getExtra(mods, b, "MO") + hard;
+      return U_MO[b][bill.mo] + coverMO(b, bill, divided) + riderSum(b, bill, mods) * 0.85 + getExtra(mods, b, "MO") + northPressure(mods, b, bill) + hard;
     case "MEMO":
-      return U_MO[b][bill.mo] + coverMO(b, bill, divided) + TIE_JOINED[b] + riderSum(b, bill, mods) * 0.85 + getExtra(mods, b, "MO") + hard;
+      return U_MO[b][bill.mo] + coverMO(b, bill, divided) + TIE_JOINED[b] + riderSum(b, bill, mods) * 0.85 + getExtra(mods, b, "MO") + northPressure(mods, b, bill) + hard;
     case "LINE":
       return U_LN[b][bill.ln] + riderSum(b, bill, mods) * 0.6 + getExtra(mods, b, "LINE");
     case "ME":
@@ -471,7 +494,7 @@ function compScore(b, comp, bill, mods, divided){
   return 0;
 }
 function rollcalls(bill){
-  if(bill.pr === "postpone" || bill.pr === "committee") return [];
+  if(bill.pr === "committee") return [];
   const line = bill.ln !== "none", joined = bill.me === "joined";
   if(bill.pr === "divide"){
     const r = [];
@@ -518,7 +541,7 @@ function runVote(members, bill, mods, rng){
 }
 function senateP(bill, day, mods){
   if(!(bill.mo === "silent" || bill.mo === "open")) return 0.02;
-  let p = {joined:0.96, twin:0.95, pledge:0.35, alone:0.10, extend:0.10}[bill.me];
+  let p = {joined:0.96, twin:0.95, pledge:0.35, alone:0.10}[bill.me];
   p += {none:0, "40":0, sunset:0, "3630":0.03, pacific:-0.15, arkansas:-0.5}[bill.ln];
   if(bill.sw.includes("tariff_up")) p -= 0.05;
   if(bill.sw.includes("monroe")) p += 0.03;
@@ -547,17 +570,9 @@ function mainRc(bill){
   if(!rcs.length) return null;
   return (rcs.find(r => r.id === "MO" || r.id === "MEMO" || r.id === "ALL")).id;
 }
-/* how a bloc's average score moved between two bills (for overnight word-of-mouth) */
-function blocShift(blocId, billOld, billNew, mods){
-  const a = rollcalls(billOld).map(r => r.id).join(), b = rollcalls(billNew).map(r => r.id).join();
-  if(a !== b) return 9;
-  let mx = 0;
-  for(const rc of rollcalls(billNew)) mx = Math.max(mx, Math.abs(blocScore(blocId, rc.id, billNew, mods) - blocScore(blocId, rc.id, billOld, mods)));
-  return mx;
-}
 
 if(typeof module !== "undefined") module.exports = {BLOCS, BLOC_IDS, OPTS, ARTICLES, TRAITS, defaultBill, cloneBill, billSig, billCost, makeMembers, newMods,
-  rollcalls, blocScore, memberScore, runVote, senateP, readBloc, ayeBelief, expectedAyes, mainRc, blocShift, mulberry32, gauss, Phi, catOf, optById, SW_FX};
+  rollcalls, blocScore, memberScore, runVote, senateP, readBloc, ayeBelief, expectedAyes, mainRc, mulberry32, gauss, Phi, catOf, optById, SW_FX};
 
 /* =====================================================================
    DIALOGUE: voices, dossiers, and the composer that builds an interview
@@ -598,8 +613,6 @@ taylor:{
     "mo:open":["You want to write that slavery is legal in an act of Congress. I cannot explain that to my voters.","angry"],
     "mo:gradual":["Missouri would free people slowly, by its own law. I could defend that at home. But Missouri will never do it.","skeptical"],
     "mo:vote":["Let the voters of Missouri decide? I already know how they would vote.","skeptical"],
-    "mo:census":["Waiting ten years only delays the problem. No one else will want to wait.","neutral"],
-    "mo:split":["Two Missouris is a clever idea. But no one in Missouri wants it.","skeptical"],
     "ln:3630":["I can sell that line at home. It keeps slavery out of a large part of the Purchase land.","warm"],
     "ln:40":["A line at 40 degrees protects land that no one wants.","skeptical"],
     "ln:sunset":["A line that ends in twenty years is not a real wall.","skeptical"],
@@ -736,7 +749,6 @@ holmes:{
     "me:joined":["Five of my seven colleagues say they will vote no. The math was bad. Now it is worse.","angry"],
     "me:twin":["Two bills. Maine goes up in one, and Missouri in the other. My colleagues can vote no on Missouri and yes on Maine. I could kiss you, but I will not.","warm"],
     "me:pledge":["A promise that Missouri will come later. The Senate has heard promises before. It wants a bill.","skeptical"],
-    "me:extend":["I asked Massachusetts. They sent me the law. It says 90 days.","worried"],
     "mo:silent":["I do not want to be seen liking Missouri. But I like Maine more, and I will say so.","neutral"],
     "mo:open":["Writing slavery into the bill in plain words will keep my colleagues awake at night.","worried"],
     "mo:tallmadge":["That would be nice, if the Senate would accept it. It will not. That is bad for Maine.","worried"],
@@ -796,10 +808,8 @@ cook:{
     "mo:open":["Get Missouri in! Ten thousand settlers have cleared land there. They cannot wait.","warm"],
     "mo:tallmadge":["Kentucky will kill it. Half of Illinois came from Kentucky.","angry"],
     "mo:ban":["Kentucky will kill it. Half of Illinois came from Kentucky.","angry"],
-    "mo:census":["Ten years! Settlers would move twice by then.","angry"],
     "mo:vote":["Let Missouri decide! I have said this in Illinois for years.","warm"],
     "mo:gradual":["Ask Missouri to free people by itself? It would laugh. Politely.","amused"],
-    "mo:split":["Two Missouris? We can barely agree on one.","amused"],
     "sw:road":["The road! In the West, a road is worth an army.","warm"],
     "sw:land":["Cheap land. Mr. Speaker, every man from Ohio will be happy.","warm"],
     "sw:chair_lands":["The Public Lands chair for a Westerner. It is the first time anyone offered us that.","warm"],
@@ -828,7 +838,7 @@ cook:{
     few:"On {rc}, maybe {fz}. Kentucky is hard to read.",
     some:"On {rc}, I count {fz}, but I would not bet on Kentucky.",
     nearly:"On {rc}, just under half.",
-    half:"On {rc}, about half. The free-state men are with you. The others are talking to their neighbors.",
+    half:"On {rc}, about half. The rest are still talking to their neighbors.",
     most:"On {rc}, most of the West. The roads help.",
     all:"On {rc}, almost all of us!"
   },
@@ -867,7 +877,6 @@ lowndes:{
     "mo:tallmadge":["My group cannot accept a limit on Missouri. I say it without anger.","skeptical"],
     "mo:ban":["My group cannot accept a limit on Missouri. I say it without anger.","skeptical"],
     "mo:gradual":["My group will not accept a rule that Missouri must free people. I think you know that.","skeptical"],
-    "mo:census":["Ten years is very long when ten thousand people already live there.","worried"],
     "ln:3630":["The Senate calls the line a courtesy. Many of my friends see it as an insult. I see it as a price.","neutral"],
     "ln:none":["Without the line, my friends are comfortable. The North will not be.","neutral"],
     "ln:sunset":["A line that can change in twenty years. My friends could live with that.","warm"],
@@ -946,7 +955,6 @@ randolph:{
     "mo:ban":["A limit on Missouri. You want Congress to hold a lantern over Missouri’s constitution.","angry"],
     "mo:gradual":["Missouri must free people under pressure from Washington? Do not insult me.","angry"],
     "mo:vote":["A vote before admission, on a question Congress cannot ask? I have seen better ideas.","angry"],
-    "mo:census":["Keep Missouri out for ten years. I am almost tempted.","amused"],
     "ln:3630":["A line! You would draw a fence across the West and dare me to say the Constitution is safe.","angry"],
     "ln:sunset":["A fence with an end date. I dislike the fence, but I admire the trick.","skeptical"],
     "ln:40":["A line at 40 degrees. A thin strip of dirt. I would not fight over it, but I would not vote for it.","skeptical"],
@@ -985,7 +993,7 @@ randolph:{
     some:"On {rc}, {fz}. Deserters and Yankee-lovers. I have their names.",
     nearly:"On {rc}, half the sinners of Virginia. I cannot speak for the Georgians.",
     half:"On {rc}, half of us. The others are drinking.",
-    most:"On {rc}, all of Virginia and a few Carolinians who lost their way.",
+    most:"On {rc}, all of Virginia and most of the Carolinas. The Georgians are still thinking.",
     all:"On {rc}, every man I speak for. It is the only thing we agree on with you."
   },
   ambition:{
@@ -1038,6 +1046,7 @@ function estimateLine(cap, arr, rcName, size, rng){
   return cap.est[key].replace("{rc}", rcName).replace("{fz}", fuzz(spoken, rng)).replace("{nw}", numWord(Math.round(spoken)));
 }
 const RC_SPOKEN = {ALL:"the bill as a whole", LINE:"the line", MO:"Missouri", ME:"Maine", MEMO:"Maine and Missouri together"};
+const LINE_NAME = {"40":"The line at 40°", sunset:"The 20-year line at 36°30′", "3630":"The line at 36°30′", pacific:"The line to the Pacific", arkansas:"The line, with Arkansas"};
 
 /* Every option currently in the bill, as "art:id" keys. */
 function billKeys(bill){ return ["me:" + bill.me, "mo:" + bill.mo, "ln:" + bill.ln, "pr:" + bill.pr].concat(bill.sw.map(s => "sw:" + s)); }
@@ -1060,7 +1069,7 @@ function blocAyes(members, blocId, bill, mods){
 }
 
 /* ---------------------------------------------------------------- composer */
-/* ctx: {cap, bill, mods, members, visits, day, lastFail, unlocked:Set, reads:{rcId:[{id,cat}]}, favorsLeft, rng}
+/* ctx: {cap, bill, committee, mods, members, visits, day, lastFail, unlocked:Set, reads:{rcId:[{id,cat}]}, rng}
    returns {bubbles:[{text, ex, tag?}], notes:{est:[], ask:""}, unlocks:[], friends:[]} */
 function composeHouse(ctx){
   const C = CAST[ctx.cap], b = C.bloc, rng = ctx.rng, bill = ctx.bill;
@@ -1070,6 +1079,8 @@ function composeHouse(ctx){
   // 1. opener
   const pool = ctx.lastFail && rng() < 0.7 ? C.open.afterFail : ctx.day >= 9 && rng() < 0.6 ? C.open.late : (ctx.visits <= 1 ? C.open.first : C.open.again);
   push([_pick(pool, rng), "neutral"]);
+
+  if(ctx.committee) push(["A committee will not settle this, Mr. Speaker. But if it came to a vote, here is where my men stand.", "skeptical"]);
 
   // 2. mention (occasional), Calhoun/Webster/Clay texture
   if(C.mention.length && ctx.visits >= 2 && rng() < 0.35) push(_pick(C.mention, rng));
@@ -1181,11 +1192,10 @@ function composeSenate(ctx){
       alone:["Maine alone would make it 12 free states to 11 slave. The Senate will fight until March.", "skeptical"],
       joined:["Joined. That is the Senate’s own plan. If the House accepts it, so will we.", "warm"],
       twin:["Two bills sent as a pair. The Senate will look at that if both arrive together. Do not send one without the other.", "warm"],
-      pledge:["A promise is not enough. The Senate has had promises before. It wants a bill.", "skeptical"],
-      extend:["That is Massachusetts’s law, not ours. We cannot change a law we did not write.", "amused"]
+      pledge:["A promise is not enough. The Senate has had promises before. It wants a bill.", "skeptical"]
     }[bill.me];
     push(m);
-    if((bill.me === "alone" || bill.me === "pledge" || bill.me === "extend")){
+    if(bill.me === "alone" || bill.me === "pledge"){
       out.bubbles.push({text:"The Senate only cares that the two states move together. It can be one bill or two. I mention it as a matter of grammar.", ex:"amused", tag:"unlock"});
       out.unlocks.push("me:twin");
     }
@@ -1223,12 +1233,14 @@ if(typeof module !== "undefined") module.exports = {CAST, composeHouse, composeS
    Style rule: BACKGROUNDS are pen-and-ink strokes with a hand wobble.
    PEOPLE are colour lithograph: flat fills, halftone shading, misregistration.
    ===================================================================== */
-const INK = "#2b1d12", PAPER = "#efe4c8", WASH = "#d9c7a0", SERIF = '"IM Fell English","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif';
+const INK = "#2b1d12", PAPER = "#efe4c8", SERIF = '"IM Fell English","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif';
 const STAGE = {W:1200, H:780};
 const MARGIN = 24, SEC_GAP = 10, ROWS = 5;
 const ROW_Y = [332, 374, 419, 465, 514];
 const ROW_S = [0.86, 0.91, 0.96, 1.0, 1.05];
 const PEN = {x0:36, w:1128, y0:552, y1:772};
+const WALK_S = 0.9; // seconds a member takes to walk between seat and pen (matches .spr transition)
+const ROLL_S = 3.6; // seconds the clerk takes to call every name
 const SHORT_NAME = {R:"Restrictionists", M:"Maine", C:"Cover-seekers", W:"The West", B:"Border moderates", H:"Southern hardliners"};
 const CATS = [-2, -1, 0, 1, 2];
 const CAT_LABEL = {"-2":"Nay", "-1":"Leaning nay", "0":"Doubtful", "1":"Leaning aye", "2":"Aye"};
@@ -1249,83 +1261,124 @@ function svgDefs(){
   <pattern id="dots" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><circle cx="2" cy="2" r="0.95" fill="${INK}" opacity=".42"/></pattern>
   <radialGradient id="vig" cx="50%" cy="46%" r="70%"><stop offset="55%" stop-color="#d9c08e" stop-opacity="0"/><stop offset="100%" stop-color="#b79a62" stop-opacity=".55"/></radialGradient>
   <clipPath id="ceilClip"><rect x="0" y="20" width="1200" height="98"/></clipPath>
+  <linearGradient id="marble" x1="0" x2="1"><stop offset="0" stop-color="#eee2c6"/><stop offset=".5" stop-color="#d9c29b"/><stop offset="1" stop-color="#ad8f62"/></linearGradient>
+  <pattern id="breccia" width="34" height="46" patternUnits="userSpaceOnUse"><ellipse cx="7" cy="9" rx="5" ry="3.4" fill="#9c6b4a" opacity=".55"/><ellipse cx="24" cy="20" rx="6" ry="3" fill="#b07d55" opacity=".5"/><ellipse cx="12" cy="33" rx="4" ry="5" fill="#8a5e40" opacity=".45"/><ellipse cx="28" cy="40" rx="3" ry="2.4" fill="#a87650" opacity=".5"/></pattern>
+  <linearGradient id="skyLight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9efe9"/></linearGradient>
+  <radialGradient id="flameGlow"><stop offset="0" stop-color="#ffe6a0" stop-opacity=".85"/><stop offset="1" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient>
+  <radialGradient id="hallLight" cx="50%" cy="10%" r="75%"><stop offset="0" stop-color="#fff6dc" stop-opacity=".5"/><stop offset=".6" stop-color="#fff6dc" stop-opacity=".12"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0"/></radialGradient>
+  <linearGradient id="boards" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a272"/><stop offset="1" stop-color="#dcc095"/></linearGradient>
   <clipPath id="bustClip"><rect x="-13" y="-48" width="26" height="35"/></clipPath>`;
 }
 
 /* ---------- the chamber, in ink ---------- */
 function chamberBG(){
   const L = (x1, y1, x2, y2, w) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${w || 1.4}"/>`;
-  let ink = "", wash = "", ink2 = "", wash2 = "";
+  const f1 = v => v.toFixed(1);
+  // col/col2: flat colour plates under the ink (lithograph style); wash: hatching; ink: the pen line
+  let col = "", ink = "", wash = "", col2 = "", ink2 = "", wash2 = "";
 
   // ceiling: a coffered plane seen from below, converging on the far wall
+  const ROWS_Y = [10, 24, 42, 58, 72, 84, 94, 102, 109, 114];
+  const cx = (i, y) => 600 + i * (118 - 42 * (y - 10) / 104);
+  col += `<path d="M0,10 H1200 V114 H0Z" fill="#efe1bf"/>`;
   let ceil = "";
   for(let i = -10; i <= 10; i++) ceil += L(600 + i * 118, 10, 600 + i * 76, 114, i % 4 === 0 ? 1.8 : 1.0);
-  [24, 42, 58, 72, 84, 94, 102, 109].forEach((y, k) => { ceil += `<path d="M0,${y} H1200" stroke-width="${k % 2 ? 1 : 1.6}" fill="none"/>`; });
+  ROWS_Y.slice(1, -1).forEach((y, k) => { ceil += `<path d="M0,${y} H1200" stroke-width="${k % 2 ? 1 : 1.6}" fill="none"/>`; });
+  for(let k = 0; k < ROWS_Y.length - 1; k++){
+    const ya = ROWS_Y[k], yb = ROWS_Y[k + 1], h = yb - ya, ins = h * 0.2;
+    for(let i = -10; i < 10; i++){
+      const y0 = ya + ins, y1 = yb - ins;
+      const a0 = cx(i, y0), a1 = cx(i + 1, y0), b0 = cx(i, y1), b1 = cx(i + 1, y1), w0 = (a1 - a0) * 0.16, w1 = (b1 - b0) * 0.16;
+      const my = (y0 + y1) / 2, half = 164 - (my - 28) * 34 / 60; // the skylight: 436-764 at y 28, 470-730 at y 88
+      if(my > 24 && my < 92 && Math.abs((a0 + a1 + b0 + b1) / 4 - 600) < half + 4) continue;
+      col += `<path d="M${f1(a0 + w0)},${f1(y0)} L${f1(a1 - w0)},${f1(y0)} L${f1(b1 - w1)},${f1(y1)} L${f1(b0 + w1)},${f1(y1)} Z" fill="#d9c391"/>`;
+      col += `<path d="M${f1(a0 + w0)},${f1(y0)} L${f1(a1 - w0)},${f1(y0)} L${f1(a1 - w0 - 2)},${f1(y0 + h * 0.18)} L${f1(a0 + w0 + 2)},${f1(y0 + h * 0.18)} Z" fill="#b99a5e" opacity=".6"/>`;
+      if(h >= 10){ const mx = (a0 + a1 + b0 + b1) / 4; col += `<circle cx="${f1(mx)}" cy="${f1(my)}" r="${f1(Math.min(3.2, h * 0.17))}" fill="#c9a03a"/>`; ink += `<circle cx="${f1(mx)}" cy="${f1(my)}" r="${f1(Math.min(3.2, h * 0.17))}" stroke-width=".7"/>`; }
+    }
+  }
   ink += `<g clip-path="url(#ceilClip)">${ceil}</g>`;
-  wash += `<path d="M0,10 H1200 V114 H0Z" fill="url(#hatch)" opacity=".22"/>`;
-  wash += `<path d="M436,28 H764 L730,88 H470 Z" fill="${PAPER}"/>`;
+  // the skylight
+  col += `<path d="M436,28 H764 L730,88 H470 Z" fill="#f7f0d8"/><path d="M448,34 H752 L722,82 H478 Z" fill="url(#skyLight)"/>`;
   ink += `<path d="M436,28 H764 L730,88 H470 Z" fill="none" stroke-width="2.4"/><path d="M448,34 H752 L722,82 H478 Z" fill="none" stroke-width="1.2"/>`;
   for(let i = 0; i < 11; i++){ const x = 450 + i * 30; ink += L(x, 34, 600 + (x - 600) * 0.78, 82, 0.9); }
   // cornice with dentils
-  ink += `<rect x="18" y="116" width="1164" height="16" fill="${PAPER}" stroke-width="2"/><rect x="18" y="132" width="1164" height="9" fill="${PAPER}" stroke-width="1.4"/>`;
-  for(let x = 24; x < 1180; x += 13) ink += `<rect x="${x}" y="121" width="6" height="8" fill="${WASH}" stroke-width="0.9"/>`;
+  col += `<rect x="18" y="116" width="1164" height="25" fill="#e8d6ae"/><rect x="18" y="138" width="1164" height="3" fill="#c9a03a" opacity=".8"/>`;
+  ink += `<rect x="18" y="116" width="1164" height="16" stroke-width="2"/><rect x="18" y="132" width="1164" height="9" stroke-width="1.4"/>`;
+  for(let x = 24; x < 1180; x += 13) ink += `<rect x="${x}" y="121" width="6" height="8" fill="#cdb889" stroke-width="0.9"/>`;
   wash += `<rect x="18" y="141" width="1164" height="8" fill="url(#hatch2)" opacity=".7"/>`;
+  // the wall behind the colonnade
+  col += `<rect x="18" y="141" width="1164" height="136" fill="#eadbb6"/>`;
 
-  // colonnade
+  // colonnade of marble columns
   const cols = []; for(let i = 0; i < 9; i++) cols.push(84 + i * 129);
+  // drapes first, so the columns stand in front of them
+  [0, 1, 2, 3, 4, 6, 7].forEach(i => {
+    const x0 = cols[i] + 24, x1 = cols[i + 1] - 24, m = (x0 + x1) / 2;
+    const left = `M${x0},150 H${x0 + 20} Q${x0 + 12},190 ${x0 + 9},214 Q${x0 + 14},236 ${x0 + 22},256 H${x0} Z`;
+    const right = `M${x1},150 H${x1 - 20} Q${x1 - 12},190 ${x1 - 9},214 Q${x1 - 14},236 ${x1 - 22},256 H${x1} Z`;
+    const swag = `M${x0},148 H${x1} V156 Q${m},194 ${x0},156 Z`;
+    col += `<path d="${left}" fill="#a23b30"/><path d="${right}" fill="#a23b30"/><path d="${swag}" fill="#b4473a"/>`;
+    wash += `<path d="${left}" fill="url(#hatch)" opacity=".45" stroke="none"/><path d="${right}" fill="url(#hatch)" opacity=".45" stroke="none"/>`;
+    ink += `<path d="${left}" stroke-width="1.3"/><path d="${right}" stroke-width="1.3"/><path d="M${x0},156 Q${m},194 ${x1},156" stroke-width="1.6"/>`;
+    ink += `<path d="M${x0 + 6},${152} Q${x0 + 4},200 ${x0 + 5},214 M${x1 - 6},${152} Q${x1 - 4},200 ${x1 - 5},214 M${x0 + 12},${158} Q${m - 8},178 ${m},181 M${x1 - 12},${158} Q${m + 8},178 ${m},181" stroke-width=".9" opacity=".7"/>`;
+    ink += `<path d="M${x0 + 2},159 Q${m},199 ${x1 - 2},159" stroke="#c9a03a" stroke-width="2.6" stroke-dasharray="1.6 2.4"/>`;
+    col += `<ellipse cx="${x0 + 10}" cy="214" rx="5" ry="3.2" fill="#d4ad45"/><ellipse cx="${x1 - 10}" cy="214" rx="5" ry="3.2" fill="#d4ad45"/>`;
+    ink += `<ellipse cx="${x0 + 10}" cy="214" rx="5" ry="3.2" stroke-width=".9"/><ellipse cx="${x1 - 10}" cy="214" rx="5" ry="3.2" stroke-width=".9"/>`;
+  });
   cols.forEach((x, i) => {
+    col += `<path d="M${x - 15},152 L${x - 13},262 L${x + 13},262 L${x + 15},152 Z" fill="url(#marble)"/><path d="M${x - 15},152 L${x - 13},262 L${x + 13},262 L${x + 15},152 Z" fill="url(#breccia)" opacity=".55"/>`;
     ink += `<path d="M${x - 15},152 L${x - 13},262 M${x + 15},152 L${x + 13},262" fill="none" stroke-width="2"/>`;
-    for(const dx of [-8, -2.5, 3, 8.5]) ink += `<path d="M${x + dx},156 L${x + dx * 0.9},260" fill="none" stroke-width="0.9" opacity=".8"/>`;
-    wash += `<path d="M${x + 4},152 L${x + 15},152 L${x + 13},262 L${x + 4},262 Z" fill="url(#hatch)" opacity=".6"/>`;
+    for(const dx of [-8, -2.5, 3, 8.5]) ink += `<path d="M${x + dx},156 L${x + dx * 0.9},260" fill="none" stroke-width="0.9" opacity=".6"/>`;
+    wash += `<path d="M${x + 4},152 L${x + 15},152 L${x + 13},262 L${x + 4},262 Z" fill="url(#hatch)" opacity=".5"/>`;
     // capital: two volutes and an abacus
-    ink += `<path d="M${x - 24},152 L${x + 24},152 L${x + 22},140 L${x - 22},140 Z" fill="${PAPER}" stroke-width="1.6"/>`;
+    col += `<path d="M${x - 24},152 L${x + 24},152 L${x + 22},140 L${x - 22},140 Z" fill="#efe2c2"/><path d="M${x - 20},140 Q${x - 26},128 ${x - 14},128 Q${x - 8},136 ${x - 4},140 H${x + 4} Q${x + 8},136 ${x + 14},128 Q${x + 26},128 ${x + 20},140 Z" fill="#efe2c2"/>`;
+    ink += `<path d="M${x - 24},152 L${x + 24},152 L${x + 22},140 L${x - 22},140 Z" fill="none" stroke-width="1.6"/>`;
     ink += `<path d="M${x - 20},140 Q${x - 26},128 ${x - 14},128 Q${x - 8},136 ${x - 4},140 M${x + 20},140 Q${x + 26},128 ${x + 14},128 Q${x + 8},136 ${x + 4},140" fill="none" stroke-width="1.3"/>`;
     ink += `<circle cx="${x - 15}" cy="132" r="2.6" fill="none" stroke-width="1"/><circle cx="${x + 15}" cy="132" r="2.6" fill="none" stroke-width="1"/>`;
     // base
-    ink += `<rect x="${x - 21}" y="262" width="42" height="9" fill="${PAPER}" stroke-width="1.6"/><rect x="${x - 25}" y="271" width="50" height="6" fill="${PAPER}" stroke-width="1.4"/>`;
-  });
-  // drapes in the outer bays
-  [0, 1, 2, 3, 4, 6, 7].forEach(i => {
-    const x0 = cols[i] + 26, x1 = cols[i + 1] - 26, m = (x0 + x1) / 2;
-    wash += `<path d="M${x0},150 Q${m},196 ${x1},150 L${x1},254 L${x0},254 Z" fill="${WASH}" opacity=".55"/>`;
-    ink += `<path d="M${x0},150 Q${m},196 ${x1},150" fill="none" stroke-width="1.6"/>`;
-    for(let k = 0; k < 5; k++){
-      const xx = x0 + 6 + k * (x1 - x0 - 12) / 4;
-      ink += `<path d="M${xx.toFixed(1)},${(160 + Math.abs(k - 2) * 8)} Q${(xx + (k % 2 ? 5 : -5)).toFixed(1)},208 ${xx.toFixed(1)},254" fill="none" stroke-width="1" opacity=".85"/>`;
-    }
-    ink += `<path d="M${x0},254 Q${m},262 ${x1},254" fill="none" stroke-width="1.2"/>`;
+    col += `<rect x="${x - 25}" y="262" width="50" height="15" fill="#e8d8b4"/>`;
+    ink += `<rect x="${x - 21}" y="262" width="42" height="9" fill="none" stroke-width="1.6"/><rect x="${x - 25}" y="271" width="50" height="6" fill="none" stroke-width="1.4"/>`;
   });
   // the Senate door (bay 5)
-  let door = "", doorw = "";
-  door += `<path d="M1018,272 V186 Q1018,156 1052,156 Q1086,156 1086,186 V272 Z" fill="${PAPER}" stroke-width="2.4"/>`;
-  door += `<path d="M1026,272 V190 Q1026,166 1052,166 Q1078,166 1078,190 V272 Z" fill="#8a6a44" fill-opacity=".7" stroke-width="1.6"/>`;
-  door += `<path d="M1052,166 V272 M1030,200 H1074 M1030,236 H1074" fill="none" stroke-width="1.1"/><circle cx="1046" cy="226" r="2" fill="${INK}"/><circle cx="1058" cy="226" r="2" fill="${INK}"/>`;
-  door += `<path d="M1004,158 L1052,132 L1100,158 Z" fill="${PAPER}" stroke-width="2"/><rect x="1006" y="158" width="92" height="8" fill="${PAPER}" stroke-width="1.4"/>`;
+  let door = "", doorc = "", doorw = "";
+  doorc += `<path d="M1018,272 V186 Q1018,156 1052,156 Q1086,156 1086,186 V272 Z" fill="#efe2c2"/><path d="M1026,272 V190 Q1026,166 1052,166 Q1078,166 1078,190 V272 Z" fill="#7a5131"/><path d="M1004,158 L1052,132 L1100,158 Z" fill="#efe2c2"/><rect x="1006" y="158" width="92" height="8" fill="#e8d6ae"/>`;
+  door += `<path d="M1018,272 V186 Q1018,156 1052,156 Q1086,156 1086,186 V272 Z" fill="none" stroke-width="2.4"/>`;
+  door += `<path d="M1026,272 V190 Q1026,166 1052,166 Q1078,166 1078,190 V272 Z" fill="none" stroke-width="1.6"/>`;
+  door += `<path d="M1052,166 V272 M1030,200 H1074 M1030,236 H1074" fill="none" stroke-width="1.1"/><circle cx="1046" cy="226" r="2.2" fill="#d4ad45"/><circle cx="1058" cy="226" r="2.2" fill="#d4ad45"/>`;
+  door += `<path d="M1004,158 L1052,132 L1100,158 Z" fill="none" stroke-width="2"/><rect x="1006" y="158" width="92" height="8" fill="none" stroke-width="1.4"/>`;
   doorw += `<path d="M1052,166 V272 H1078 V190 Q1078,166 1052,166 Z" fill="url(#hatch)" opacity=".5"/>`;
-
-  ink += `<g transform="translate(-259 0)">${door}</g>`; wash += `<g transform="translate(-259 0)">${doorw}</g>`;
+  col += `<g transform="translate(-259 0)">${doorc}</g>`; ink += `<g transform="translate(-259 0)">${door}</g>`; wash += `<g transform="translate(-259 0)">${doorw}</g>`;
+  // the Car of History clock (bay 1): Clio rides a winged chariot whose wheel is the clock
+  const ch = carOfHistory(277.5, 214);
+  col += ch.col; ink += ch.ink;
+  // the chandelier, hanging from the skylight
+  const cd = chandelier(600, 88);
+  col += cd.col; ink += cd.ink;
 
   // section pennants (not shifted)
   const geo = chamberGeometry();
   BLOC_IDS.forEach(b => {
     const s = geo.sections[b], w = Math.max(84, s.x1 - s.x0 - 6), x = s.cx - w / 2;
-    ink2 += `<path d="M${x},252 H${x + w} V274 L${s.cx},283 L${x},274 Z" fill="${PAPER}" stroke-width="1.8"/>`;
+    ink2 += `<path d="M${x},252 H${x + w} V274 L${s.cx},283 L${x},274 Z" fill="#f4ead0" stroke-width="1.8"/>`;
     ink2 += `<rect x="${x + 4}" y="256" width="${w - 8}" height="3.4" fill="${BLOCS[b].color}" stroke="none"/>`;
     ink2 += `<text x="${s.cx}" y="271" text-anchor="middle" font-family='${SERIF}' font-size="14" font-style="italic" fill="${INK}" stroke="none">${SHORT_NAME[b]}</text>`;
   });
 
-  // tiers: long desks
+  // tiers: the floor of the hall and the long mahogany desks
+  col2 += `<rect x="0" y="257" width="1200" height="${ROW_Y[4] + 16 - 257}" fill="#e3cfa4"/>`;
   for(let r = 0; r < ROWS; r++){
-    const y = ROW_Y[r] - 13 * ROW_S[r];
+    const y = ROW_Y[r] - 13 * ROW_S[r], h = 9 * ROW_S[r];
+    col2 += `<rect x="18" y="${y}" width="1164" height="${h}" fill="#9b6338"/><rect x="18" y="${y}" width="1164" height="${f1(h * 0.32)}" fill="#c08a52"/>`;
     wash2 += `<rect x="18" y="${y + 9}" width="1164" height="${8 * ROW_S[r]}" fill="url(#hatch)" opacity=".55"/>`;
-    ink2 += `<rect x="18" y="${y}" width="1164" height="${9 * ROW_S[r]}" fill="${PAPER}" stroke-width="1.8"/>`;
-    ink2 += `<path d="M18,${y + 9 * ROW_S[r]} H1182" fill="none" stroke-width="2.2"/>`;
+    ink2 += `<rect x="18" y="${y}" width="1164" height="${h}" fill="none" stroke-width="1.8"/>`;
+    ink2 += `<path d="M18,${y + h} H1182" fill="none" stroke-width="2.2"/>`;
     BLOC_IDS.forEach((b, i) => { if(i){ const sx = geo.sections[b].x0 - SEC_GAP / 2; ink2 += L(sx, y - 1, sx, y + 10 * ROW_S[r], 1.6); } });
   }
   // aisle strips between the sections down to the pens
   BLOC_IDS.forEach((b, i) => { if(i){ const sx = geo.sections[b].x0 - SEC_GAP / 2; ink2 += `<path d="M${sx},${ROW_Y[4] + 8} V${PEN.y0 - 6}" fill="none" stroke-width="0.8" stroke-dasharray="3 6" opacity=".4"/>`; } });
 
-  // floor boards
+  // the floor of the well: warm boards
+  col2 += `<rect x="0" y="${ROW_Y[4] + 16}" width="1200" height="${STAGE.H - ROW_Y[4] - 16}" fill="url(#boards)"/>`;
   let fy = ROW_Y[4] + 16, step = 9, k = 0;
   while(fy < STAGE.H){
     ink2 += `<path d="M0,${fy.toFixed(1)} H1200" fill="none" stroke-width="${0.7 + k * 0.03}" opacity=".5"/>`;
@@ -1334,11 +1387,69 @@ function chamberBG(){
   }
   const pens = penBG();
   return `<rect width="1200" height="780" fill="${PAPER}"/>
-    <g filter="url(#wob)"><g transform="translate(0 -20)"><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round">${wash}</g><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round" fill="none">${ink}</g></g>
-      <g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round">${wash2}</g><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round" fill="none">${ink2}</g></g>
+    <g filter="url(#wob)"><g transform="translate(0 -20)"><g stroke="none">${col}</g><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round">${wash}</g><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round" fill="none">${ink}</g></g>
+      <g stroke="none">${col2}</g><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round">${wash2}</g><g stroke="${INK}" stroke-linecap="round" stroke-linejoin="round" fill="none">${ink2}</g></g>
+    <g transform="translate(0 -20)">${ch.hands}${cd.glow}</g>
+    <ellipse cx="600" cy="230" rx="560" ry="300" fill="url(#hallLight)" pointer-events="none"/>
     ${pens}
     <rect width="1200" height="780" fill="url(#vig)" pointer-events="none"/>
     <rect width="1200" height="780" filter="url(#paper)" opacity=".55" pointer-events="none" style="mix-blend-mode:multiply"/>`;
+}
+
+/* Carlo Franzoni's Car of History (1819), which hung over the door of the House chamber:
+   Clio, the muse of history, rides a winged chariot and writes. The chariot wheel is the clock. */
+function carOfHistory(x, y){
+  let col = "", ink = "";
+  const wc = [x - 4, y + 8]; // clock wheel centre
+  // globe and plinth
+  col += `<path d="M${x - 30},${y + 40} H${x + 30} L${x + 26},${y + 33} H${x - 26} Z" fill="#e8dcc0"/><circle cx="${x}" cy="${y + 26}" r="12" fill="#e9dfc6"/>`;
+  ink += `<path d="M${x - 30},${y + 40} H${x + 30} L${x + 26},${y + 33} H${x - 26} Z" stroke-width="1.3"/><circle cx="${x}" cy="${y + 26}" r="12" stroke-width="1.2"/><path d="M${x - 12},${y + 24} Q${x},${y + 31} ${x + 12},${y + 24}" stroke-width=".9"/>`;
+  // the wing, sweeping up behind the car
+  const wing = `M${x + 14},${y - 4} Q${x + 30},${y - 12} ${x + 34},${y - 34} Q${x + 24},${y - 26} ${x + 22},${y - 30} Q${x + 18},${y - 20} ${x + 14},${y - 22} Q${x + 14},${y - 12} ${x + 8},${y - 10} Z`;
+  col += `<path d="${wing}" fill="#f1e8d2"/>`;
+  ink += `<path d="${wing}" stroke-width="1.2"/><path d="M${x + 16},${y - 8} Q${x + 24},${y - 16} ${x + 28},${y - 28} M${x + 13},${y - 9} Q${x + 18},${y - 14} ${x + 20},${y - 24}" stroke-width=".8" opacity=".7"/>`;
+  // Clio, standing in the car and writing in her book
+  const robe = `M${x - 6},${y - 2} Q${x - 9},${y - 20} ${x - 5},${y - 36} Q${x - 1},${y - 40} ${x + 3},${y - 36} Q${x + 6},${y - 20} ${x + 5},${y - 2} Z`;
+  col += `<path d="${robe}" fill="#f4ecd8"/><circle cx="${x - 1}" cy="${y - 42}" r="4.4" fill="#f4ecd8"/>`;
+  ink += `<path d="${robe}" stroke-width="1.1"/><circle cx="${x - 1}" cy="${y - 42}" r="4.4" stroke-width="1"/><path d="M${x - 3},${y - 30} Q${x - 1},${y - 16} ${x - 2},${y - 3} M${x + 1},${y - 30} Q${x + 3},${y - 16} ${x + 2},${y - 3}" stroke-width=".7" opacity=".6"/>`;
+  col += `<path d="M${x - 20},${y - 26} L${x - 9},${y - 30} L${x - 8},${y - 22} L${x - 19},${y - 18} Z" fill="#fbf6e8"/>`;
+  ink += `<path d="M${x - 20},${y - 26} L${x - 9},${y - 30} L${x - 8},${y - 22} L${x - 19},${y - 18} Z" stroke-width="1"/><path d="M${x - 5},${y - 31} L${x - 12},${y - 25}" stroke-width="1"/>`;
+  // the chariot body
+  const car = `M${x - 24},${y - 6} Q${x - 26},${y + 8} ${x - 12},${y + 16} H${x + 16} Q${x + 24},${y + 6} ${x + 20},${y - 6} Z`;
+  col += `<path d="${car}" fill="#e9dcc0"/><path d="M${x - 22},${y - 6} H${x + 19} V${y - 2} H${x - 23} Z" fill="#c9a03a"/>`;
+  ink += `<path d="${car}" stroke-width="1.5"/><path d="M${x - 22},${y - 2} H${x + 19}" stroke-width="1"/>`;
+  // the clock: the chariot's wheel
+  col += `<circle cx="${wc[0]}" cy="${wc[1]}" r="15" fill="#c9a03a"/><circle cx="${wc[0]}" cy="${wc[1]}" r="12" fill="#fbf6e8"/>`;
+  ink += `<circle cx="${wc[0]}" cy="${wc[1]}" r="15" stroke-width="1.5"/><circle cx="${wc[0]}" cy="${wc[1]}" r="12" stroke-width="1"/>`;
+  for(let h = 0; h < 12; h++){ const a = h * Math.PI / 6, r0 = h % 3 ? 10 : 8.6; ink += `<path d="M${(wc[0] + Math.sin(a) * r0).toFixed(1)},${(wc[1] - Math.cos(a) * r0).toFixed(1)} L${(wc[0] + Math.sin(a) * 11.6).toFixed(1)},${(wc[1] - Math.cos(a) * 11.6).toFixed(1)}" stroke-width="${h % 3 ? .8 : 1.4}"/>`; }
+  const hands = `<g aria-hidden="true"><title>The Car of History clock (1819). Clio, the muse of history, rides in a winged chariot and writes down what the House does.</title>
+    <g id="clockH" style="transform-origin:${wc[0]}px ${wc[1]}px;transform:rotate(300deg);transition:transform 1.6s cubic-bezier(.4,.1,.3,1)"><path d="M${wc[0]},${wc[1] + 1.5} V${wc[1] - 6.5}" stroke="${INK}" stroke-width="2.2" stroke-linecap="round"/></g>
+    <g id="clockM" style="transform-origin:${wc[0]}px ${wc[1]}px;transform:rotate(0deg);transition:transform 1.6s cubic-bezier(.4,.1,.3,1)"><path d="M${wc[0]},${wc[1] + 2} V${wc[1] - 9.5}" stroke="${INK}" stroke-width="1.3" stroke-linecap="round"/></g>
+    <circle cx="${wc[0]}" cy="${wc[1]}" r="1.6" fill="${INK}"/></g>`;
+  return {col, ink, hands};
+}
+
+/* a brass chandelier with candles, hanging from the skylight */
+function chandelier(x, y){
+  let col = "", ink = "", glow = "";
+  const ring = y + 50, arms = [-42, -28, -14, 0, 14, 28, 42];
+  ink += `<path d="M${x},${y} V${y + 22}" stroke-width="1.4" stroke-dasharray="3 2"/>`;
+  col += `<path d="M${x - 5},${y + 22} H${x + 5} L${x + 3},${y + 28} H${x - 3} Z" fill="#c9a03a"/><path d="M${x - 3},${y + 28} Q${x - 7},${y + 38} ${x},${y + 44} Q${x + 7},${y + 38} ${x + 3},${y + 28} Z" fill="#d4ad45"/>`;
+  ink += `<path d="M${x - 5},${y + 22} H${x + 5} L${x + 3},${y + 28} H${x - 3} Z" stroke-width="1"/><path d="M${x - 3},${y + 28} Q${x - 7},${y + 38} ${x},${y + 44} Q${x + 7},${y + 38} ${x + 3},${y + 28} Z" stroke-width="1"/><path d="M${x},${y + 44} V${ring}" stroke-width="1.4"/>`;
+  arms.forEach(dx => {
+    const ax = x + dx, top = ring - 12 + Math.abs(dx) * 0.06;
+    ink += `<path d="M${x + dx * 0.4},${ring} Q${ax},${ring + 4} ${ax},${top + 6}" stroke-width="1.1"/>`;
+    col += `<rect x="${ax - 1.6}" y="${top - 3}" width="3.2" height="8" fill="#fbf6e8"/><path d="M${ax - 3.4},${top + 5} H${ax + 3.4} L${ax + 2},${top + 8} H${ax - 2} Z" fill="#c9a03a"/>`;
+    ink += `<rect x="${ax - 1.6}" y="${top - 3}" width="3.2" height="8" stroke-width=".7"/>`;
+    glow += `<circle cx="${ax}" cy="${top - 7}" r="9" fill="url(#flameGlow)"/><path d="M${ax},${top - 3.5} Q${ax - 2.2},${top - 7} ${ax},${top - 11} Q${ax + 2.2},${top - 7} ${ax},${top - 3.5} Z" fill="#ffd36b"/>`;
+  });
+  col += `<ellipse cx="${x}" cy="${ring}" rx="46" ry="6.5" fill="none" stroke="#c9a03a" stroke-width="4"/>`;
+  ink += `<ellipse cx="${x}" cy="${ring}" rx="46" ry="6.5" stroke-width="1.2"/><ellipse cx="${x}" cy="${ring}" rx="40" ry="4.5" stroke-width=".7" opacity=".6"/>`;
+  for(let i = -5; i <= 5; i++){ const dx = i * 8.4, dy = Math.sqrt(Math.max(0, 1 - (dx / 46) ** 2)) * 6.5; col += `<path d="M${(x + dx).toFixed(1)},${(ring + dy).toFixed(1)} l-1.6,3.6 l1.6,2.4 l1.6,-2.4 Z" fill="#f4f1e6"/>`; ink += `<path d="M${(x + dx).toFixed(1)},${(ring + dy).toFixed(1)} l-1.6,3.6 l1.6,2.4 l1.6,-2.4 Z" stroke-width=".5"/>`; }
+  col += `<path d="M${x - 4},${ring + 5} Q${x},${ring + 20} ${x + 4},${ring + 5} Z" fill="#c9a03a"/>`;
+  ink += `<path d="M${x - 4},${ring + 5} Q${x},${ring + 20} ${x + 4},${ring + 5} Z" stroke-width="1"/>`;
+  const k = 1.45, T = h => `<g transform="translate(${x} ${y}) scale(${k}) translate(${-x} ${-y})">${h}</g>`;
+  return {col:T(col), ink:T(ink), glow:T(glow)};
 }
 
 /* ---------- geometry ---------- */
@@ -1357,7 +1468,9 @@ function penBG(){
   let s = "";
   CATS.forEach((c, i) => {
     const r = penRect(i), col = CAT_COLOR[c];
-    s += `<g><path d="M${r.x + 4},${r.y + 4} H${r.x + r.w - 4} V${r.y + r.h} H${r.x + 4} Z" fill="${col}" fill-opacity=".14"/>
+    s += `<g><path d="M${r.x + 4},${r.y + 4} H${r.x + r.w - 4} V${r.y + r.h} H${r.x + 4} Z" fill="#f4ead0" fill-opacity=".8"/>
+      <path d="M${r.x + 9},${r.y + 34} H${r.x + r.w - 9} V${r.y + r.h - 5} H${r.x + 9} Z" fill="none" stroke="${col}" stroke-width="1.4" stroke-opacity=".55"/>
+      <path d="M${r.x + 4},${r.y + 4} H${r.x + r.w - 4} V${r.y + r.h} H${r.x + 4} Z" fill="${col}" fill-opacity=".13"/>
       <path d="M${r.x + 4},${r.y + 4} H${r.x + r.w - 4} V${r.y + r.h} H${r.x + 4} Z" fill="url(#dots)" opacity=".18"/>
       <rect x="${r.x + 4}" y="${r.y + 4}" width="${r.w - 8}" height="26" fill="${col}" fill-opacity=".85"/>
       <text x="${r.x + r.w / 2}" y="${r.y + 23}" text-anchor="middle" font-family='${SERIF}' font-size="17" font-style="italic" fill="#fbf3dd">${CAT_LABEL[c]}</text>
@@ -1608,14 +1721,15 @@ function portraitMarkup(id, exprName){
 }
 
 /* ---- Clay in profile, facing right ---- */
+const CLAY_FACE = "M102,262 C100,236 92,214 90,190 C84,150 88,104 118,76 C140,58 178,58 196,84 C202,94 204,108 204,118 C204,124 208,128 210,134 C216,148 228,166 228,172 C226,178 214,180 208,180 C210,186 210,190 208,194 C214,196 214,200 208,202 C212,206 212,212 208,216 C206,226 208,232 200,240 C190,250 176,252 164,252 L160,288 L96,292 Z";
 function clayMarkup(){
   const skin = "#efcaa6", shade = "#c99870", hair = "#8b6a3c", coat = "#233451", collar = "#f7f1de";
-  const face = "M102,262 C100,236 92,214 90,190 C84,150 88,104 118,76 C140,58 178,58 196,84 C202,94 204,108 204,118 C204,124 208,128 210,134 C216,148 228,166 228,172 C226,178 214,180 208,180 C210,186 210,190 208,194 C214,196 214,200 208,202 C212,206 212,212 208,216 C206,226 208,232 200,240 C190,250 176,252 164,252 L160,288 L96,292 Z";
+  const face = CLAY_FACE;
   const hairD = "M88,176 C80,124 92,84 124,66 C150,54 186,60 200,88 C188,84 176,86 166,98 C150,94 132,102 122,122 C118,142 114,162 110,178 Z";
   const col = `<circle cx="150" cy="176" r="150" fill="#d8cdb8"/><circle cx="150" cy="176" r="150" fill="url(#dotsL)" opacity=".5"/>
     <path d="M0,360 C8,312 56,292 100,286 L170,292 C224,302 262,332 290,360 Z" fill="${coat}"/><path d="M0,360 C8,312 56,292 100,286 L96,360 Z" fill="url(#htK)" opacity=".5"/>
     <path d="M90,266 L100,244 L166,258 L162,290 L92,296 Z" fill="${collar}"/><path d="M96,284 Q130,300 164,286 L166,306 Q130,322 94,304 Z" fill="#fbf7ea"/>
-    <path d="${face}" fill="${skin}"/><path d="${face}" fill="url(#ht-clay)" opacity=".55" transform="translate(-16 4)"/>
+    <path d="${face}" fill="${skin}"/><path d="M84,150 C96,170 112,176 132,196 C150,216 158,240 162,258 L162,296 L90,296 Z" fill="${shade}" opacity=".45" clip-path="url(#clayFaceClip)"/><path d="M84,150 C96,170 112,176 132,196 C150,216 158,240 162,258 L162,296 L90,296 Z" fill="url(#ht-clay)" opacity=".7" clip-path="url(#clayFaceClip)"/>
     <path d="${hairD}" fill="${hair}"/><path d="M112,158 C104,158 104,180 112,186 C118,190 124,184 122,172 Z" fill="${skin}"/>`;
   const key = `<circle cx="150" cy="176" r="150" fill="none" stroke="${INK}" stroke-width="2.4"/>
     <path d="M0,360 C8,312 56,292 100,286 L170,292 C224,302 262,332 290,360" fill="none" stroke="${INK}" stroke-width="2.6"/>
@@ -1636,6 +1750,7 @@ function portraitDefs(){
   ht += dot("ht-clay", "#b98456", 1.5, 4.2) + dot("htK", INK, 1.1, 4.4) + dot("dotsL", "#fff", 1.2, 5);
   return `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${ht}
     <clipPath id="pclip"><rect width="300" height="360"/></clipPath>
+    <clipPath id="clayFaceClip"><path d="${CLAY_FACE}"/></clipPath>
     <filter id="paper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="t"/><feColorMatrix in="t" type="matrix" values="0 0 0 0 0.35  0 0 0 0 0.26  0 0 0 0 0.14  0 0 0 0.22 0"/></filter>
   </defs></svg>`;
 }
@@ -1670,20 +1785,25 @@ function badgeMarkup(capId, r){
 
 /* ---- the Senate's balance ---- */
 function scaleMarkup(){
-  return `<svg class="scaleSvg" viewBox="0 0 320 170" role="img" aria-label="The Senate balance">
-    <g stroke="${INK}" stroke-width="2.2" stroke-linecap="round" fill="none">
-      <path d="M160,150 V60 M120,152 H200" /><path d="M136,152 L160,140 L184,152" />
-    </g>
+  // each pan carries a weight engraved with its number of states; the numbers ride with the pans
+  const pan = (cls, x, cnt, tint) => `<g class="${cls}">
+        <path d="M${x},60 L${x - 27},98 M${x},60 L${x + 27},98" fill="none" stroke="${INK}" stroke-width="1.5"/>
+        <path d="M${x - 14},97 L${x - 11},79 Q${x},74 ${x + 11},79 L${x + 14},97 Z" fill="${tint}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M${x - 5},76 Q${x},70 ${x + 5},76" fill="none" stroke="${INK}" stroke-width="1.8"/>
+        <text class="${cnt}" x="${x}" y="93" text-anchor="middle" font-family='${SERIF}' font-size="15" font-weight="700" fill="#fbf3dd">11</text>
+        <path d="M${x - 34},97 H${x + 34} Q${x + 30},118 ${x},118 Q${x - 30},118 ${x - 34},97 Z" fill="#d1ad48" stroke="${INK}" stroke-width="2"/>
+        <path d="M${x - 26},102 Q${x},112 ${x + 26},102" fill="none" stroke="#fff5cf" stroke-width="2" opacity=".6"/></g>`;
+  return `<svg class="scaleSvg" viewBox="0 0 320 178" role="img" aria-label="The Senate balance">
+    <path d="M118,166 H202 L194,156 H126 Z" fill="#8a6a44" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M154,156 L157,70 H163 L166,156 Z" fill="#c9a53a" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M160,46 L166,56 L160,52 L154,56 Z" fill="#c9a53a" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"/>
     <g class="beam" style="transform-origin:160px 60px;transform:rotate(0deg);transition:transform 1.4s cubic-bezier(.3,.1,.2,1)">
-      <path d="M40,60 H280" stroke="${INK}" stroke-width="3.4" stroke-linecap="round"/>
-      <circle cx="160" cy="60" r="6" fill="#c39a2a" stroke="${INK}" stroke-width="1.6"/>
-      <g class="panL"><path d="M40,60 V96 M14,96 H66 M14,96 L40,60 M66,96 L40,60" fill="none" stroke="${INK}" stroke-width="1.6"/><path d="M8,96 H72 Q68,116 40,116 Q12,116 8,96 Z" fill="#c9a53a" fill-opacity=".85" stroke="${INK}" stroke-width="2"/></g>
-      <g class="panR"><path d="M280,60 V96 M254,96 H306 M254,96 L280,60 M306,96 L280,60" fill="none" stroke="${INK}" stroke-width="1.6"/><path d="M248,96 H312 Q308,116 280,116 Q252,116 248,96 Z" fill="#c9a53a" fill-opacity=".85" stroke="${INK}" stroke-width="2"/></g>
+      <path d="M40,60 Q100,54 160,60 Q220,54 280,60" fill="none" stroke="${INK}" stroke-width="3.6" stroke-linecap="round"/>
+      ${pan("panL", 40, "cntL", "#2e5f9e")}${pan("panR", 280, "cntR", "#a4302a")}
+      <circle cx="160" cy="60" r="6.5" fill="#c39a2a" stroke="${INK}" stroke-width="1.6"/>
     </g>
-    <text x="40" y="150" text-anchor="middle" font-family='${SERIF}' font-size="15" font-style="italic" fill="${INK}">Free states</text>
-    <text x="280" y="150" text-anchor="middle" font-family='${SERIF}' font-size="15" font-style="italic" fill="${INK}">Slave states</text>
-    <text class="cntL" x="40" y="132" text-anchor="middle" font-family='${SERIF}' font-size="20" fill="${INK}">11</text>
-    <text class="cntR" x="280" y="132" text-anchor="middle" font-family='${SERIF}' font-size="20" fill="${INK}">11</text>
+    <text x="40" y="172" text-anchor="middle" font-family='${SERIF}' font-size="15" font-style="italic" fill="${INK}">Free states</text>
+    <text x="280" y="172" text-anchor="middle" font-family='${SERIF}' font-size="15" font-style="italic" fill="${INK}">Slave states</text>
   </svg>`;
 }
 
@@ -1814,6 +1934,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const params = new URLSearchParams(location.search);
 const FAST = !!params.get("fast");
 const sleep = ms => new Promise(r => setTimeout(r, FAST ? Math.min(ms, 15) : ms));
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;"}[c]));
 const CAST_ORDER = ["taylor", "whitcomb", "holmes", "cook", "lowndes", "randolph", "thomas"];
 const need = n => Math.floor(n / 2) + 1;
@@ -1823,7 +1944,7 @@ const G = {
   members:null, mods:newMods(), day:1, actions:ACTIONS_PER_DAY,
   bill:defaultBill(), unlocked:new Set(), fresh:new Set(), met:{}, visits:{}, lastTalk:{}, offers:{},
   reads:{}, exact:{}, failed:0, lastFail:false, phase:"title", view:"bill", rc:null, busy:false, sound:true,
-  touched:new Set(), log:[], actionsUsed:0, instant:false
+  actionsUsed:0, instant:false
 };
 
 /* ---------------- sound: a few plain synthesized sounds ---------------- */
@@ -1875,7 +1996,7 @@ function buildStage(){
   CAST_ORDER.forEach(id => {
     const [x, y] = BADGE_POS[id], C = CAST[id];
     h += `<g class="badge" id="b_${id}" data-cap="${id}" transform="translate(${x} ${y})" tabindex="0" role="button" aria-label="Speak with ${esc(C.name)}">
-      <circle class="ring" r="30"/><g clip-path="url(#badgeClip)">${badgeMarkup(id, 27)}</g>
+      <circle class="ring" r="30"/><g clip-path="url(#badgeClip)">${badgeMarkup(id, 27)}</g><circle r="27.6" fill="none" stroke="#d4ad45" stroke-width="2.2"/><circle r="26.3" fill="none" stroke="${INK}" stroke-width=".8" opacity=".6"/>
       <text x="0" y="50" text-anchor="middle">${id === "thomas" ? "Senate" : C.name.replace("Mr. ", "")}</text></g>`;
   });
   h += `</g>`;
@@ -1891,12 +2012,15 @@ function place(m, pos, s, instant, delay){
   if(m.key === key) return;
   m.key = key;
   const toSeat = pos === m.seat, tf = `translate(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px) scale(${s.toFixed(3)})`;
-  clearTimeout(m.t);
-  if(instant){ el.classList.add("instant"); el.style.transform = tf; el.classList.toggle("seat", toSeat); void el.getBoundingClientRect(); el.classList.remove("instant"); return; }
-  el.classList.remove("seat"); el.classList.add("walk");
-  el.style.transitionDelay = (delay || 0).toFixed(2) + "s";
+  clearTimeout(m.t); clearTimeout(m.t0);
+  if(instant){ el.classList.remove("walk"); el.classList.add("instant"); el.style.transform = tf; el.classList.toggle("seat", toSeat); void el.getBoundingClientRect(); el.classList.remove("instant"); return; }
+  delay = delay || 0;
+  el.style.transitionDelay = delay.toFixed(2) + "s";
   el.style.transform = tf;
-  m.t = setTimeout(() => { el.classList.remove("walk"); if(toSeat) el.classList.add("seat"); }, (0.9 + (delay || 0)) * 1000 + 90);
+  // stand up and start walking only when this member actually sets off
+  const go = () => { el.classList.remove("seat"); el.classList.add("walk"); };
+  if(delay > 0.02) m.t0 = setTimeout(go, delay * 1000); else go();
+  m.t = setTimeout(() => { el.classList.remove("walk"); if(toSeat) el.classList.add("seat"); }, (WALK_S + delay) * 1000 + 90);
 }
 
 function catFor(m, rcId){
@@ -1908,7 +2032,7 @@ function catFor(m, rcId){
   const v = map[m.id]; return v === undefined ? null : v;
 }
 function currentRcs(){ return rollcalls(G.bill); }
-function ensureRc(){ const rcs = currentRcs(); if(!rcs.find(r => r.id === G.rc)) G.rc = rcs.length ? rcs[0].id : null; return G.rc; }
+function ensureRc(){ const rcs = currentRcs(); if(!rcs.find(r => r.id === G.rc)) G.rc = rcs.length ? mainRc(G.bill) : null; return G.rc; }
 
 function renderStage(opts){
   opts = opts || {};
@@ -1919,39 +2043,42 @@ function renderStage(opts){
     if(c !== null && c !== undefined && !(opts.absent && opts.absent[m.id])) list.push({id:m.id, cat:c, bloc:m.bloc, idx:m.idx});
   }
   const slots = penSlots(list);
+  // Depth order (lower sprites in front). Moving a node in the DOM cancels its running transition,
+  // so reorder first, flush styles, and only then send everyone walking.
+  const g = $("#sprites"), els = G.members.map(m => ({m, y:(slots[m.id] ? slots[m.id].y : m.seat.y)})).sort((a, b) => a.y - b.y);
+  const cur = g.children;
+  if(els.some((o, i) => cur[i] !== o.m.el)){ els.forEach(o => g.appendChild(o.m.el)); void g.getBoundingClientRect(); }
   G.members.forEach(m => {
-    const sl = slots[m.id], d = opts.instant ? 0 : Math.random() * 0.5;
+    m.el.classList.toggle("absent", !!(opts.absent && opts.absent[m.id]));
+    const sl = slots[m.id], d = opts.instant ? 0 : opts.delays ? (opts.delays[m.id] || 0) : Math.random() * 0.5;
     if(sl) place(m, {x:sl.x, y:sl.y}, sl.s, opts.instant, d); else place(m, m.seat, m.seat.s, opts.instant, d);
   });
-  // depth order: lower sprites in front
-  const g = $("#sprites"), els = G.members.map(m => ({m, y:(slots[m.id] ? slots[m.id].y : m.seat.y)})).sort((a, b) => a.y - b.y);
-  if(!opts.noReorder) els.forEach(o => g.appendChild(o.m.el));
   const cnt = {"-2":0, "-1":0, "0":0, "1":0, "2":0}; list.forEach(x => cnt[x.cat]++);
-  CATS.forEach((c, i) => { const t = $("#pc" + i); if(t) t.textContent = cnt[c]; });
   G.tally = {cnt, known:list.length};
-  renderTally();
+  if(!opts.hold){ setPenCounts(cnt); renderTally(); }
   renderBadges();
 }
+function setPenCounts(cnt){ CATS.forEach((c, i) => { const t = $("#pc" + i); if(t) t.textContent = cnt[c]; }); }
 function renderBadges(){
   CAST_ORDER.forEach(id => {
     const b = $("#b_" + id); if(!b) return;
     b.classList.toggle("new", !G.met[id]);
-    b.classList.toggle("done", !!G.met[id] && G.lastTalk[id] && G.lastTalk[id].day === G.day);
-    let tag = b.querySelector(".tagg"); if(tag) tag.remove();
+    b.classList.toggle("done", !!G.met[id] && !!G.lastTalk[id] && !G.lastTalk[id].intro && G.lastTalk[id].day === G.day);
   });
 }
 function staleVisible(){
   if(!G.tally || !G.tally.known || !G.rc) return false;
   return Object.values(G.reads).some(r => !r.stale && r.rcs[G.rc] && billSig(r.bill) !== billSig(G.bill));
 }
+function knownAyes(rcId){ let a = 0; for(const m of G.members){ const c = catFor(m, rcId); if(c !== null && c >= 1) a++; } return a; }
 function renderTally(){
   const el = $("#tally"), rcs = currentRcs(), n = G.members.length, cnt = (G.tally || {cnt:{"-2":0, "-1":0, "0":0, "1":0, "2":0}, known:0}).cnt, known = (G.tally || {known:0}).known;
-  if(!rcs.length){ el.innerHTML = `<div class="tnums"><span>No question is before the House. Delay and committees use up days and settle nothing.</span></div>`; return; }
+  if(!rcs.length){ el.innerHTML = `<div class="tnums"><span>No question is before the House. A committee uses up days and settles nothing.</span></div>`; return; }
   const unk = n - known, ayes = cnt[2] + cnt[1], nays = cnt[-2] + cnt[-1], N = need(n);
   const seg = (w, c) => `<i style="width:${(w / n * 100).toFixed(2)}%;background:${c}"></i>`;
   const stale = staleVisible();
   el.innerHTML = `
-    ${rcs.length > 1 ? `<div class="rctabs" role="tablist">${rcs.map(r => `<button class="rctab ${r.id === G.rc ? "on" : ""}" data-rc="${r.id}" role="tab">${r.short}</button>`).join("")}</div>` : ""}
+    ${rcs.length > 1 ? `<div class="rctabs" role="tablist" aria-label="Votes in this bill">${rcs.map(r => { const a = knownAyes(r.id); return `<button class="rctab ${r.id === G.rc ? "on" : ""}" data-rc="${r.id}" role="tab" aria-selected="${r.id === G.rc}">${r.short}<span class="rcn${a >= N ? " ok" : ""}">${a} aye</span></button>`; }).join("")}</div>` : ""}
     <div class="tbar" role="img" aria-label="Ayes ${ayes}, doubtful ${cnt[0]}, nays ${nays}, unknown ${unk}. ${N} needed.">${seg(cnt[2], CAT_COLOR[2])}${seg(cnt[1], CAT_COLOR[1])}${seg(cnt[0], CAT_COLOR[0])}${seg(unk, "#b8b09a")}${seg(cnt[-1], CAT_COLOR[-1])}${seg(cnt[-2], CAT_COLOR[-2])}<div class="need" style="left:${(N / n * 100).toFixed(2)}%"></div></div>
     <div class="tnums"><span><i class="dot" style="background:${CAT_COLOR[2]}"></i>Aye <b>${ayes}</b></span><span><i class="dot" style="background:${CAT_COLOR[0]}"></i>Doubtful <b>${cnt[0]}</b></span><span><i class="dot" style="background:#b8b09a"></i>Unknown <b>${unk}</b></span><span><i class="dot" style="background:${CAT_COLOR[-2]}"></i>Nay <b>${nays}</b></span><span>Need <b>${N}</b> of ${n}</span></div>
     ${stale ? `<div class="tcaution">Some of these counts are from an earlier draft of the bill.</div>` : ""}`;
@@ -1965,14 +2092,44 @@ function renderHUD(){
   let fav = ""; for(let i = 0; i < START_FAVORS; i++) fav += `<span class="fav ${i < START_FAVORS - cost ? "on" : "spent"}"></span>`;
   $("#hud").innerHTML = `<div class="ttl"><b>The Great Compromise</b> <i>&nbsp;Missouri, 1820</i></div>
     <div class="hbtns"><button class="hbtn" id="hNotes">Notebook</button><button class="hbtn" id="hSnd">Sound ${G.sound ? "on" : "off"}</button></div>
-    <div class="when">${d.dow}, ${d.date}, 1820<small>Day ${Math.min(G.day, TOTAL_DAYS)} of ${TOTAL_DAYS}</small></div>
+    <div class="when"><div>${d.dow}, ${d.date}, 1820<small>Day ${Math.min(G.day, TOTAL_DAYS)} of ${TOTAL_DAYS}</small></div>${calendarStrip()}</div>
     <div class="meters"><div class="pips" title="Talks left today"><span class="hudlbl">Talks</span>${pips}</div>
     <div class="favors" title="Favors you can spend. Striped ones are already promised in the bill."><span class="hudlbl">Favors</span>${fav}</div></div>`;
   $("#hNotes").addEventListener("click", () => { if(G.busy) return; G.view = G.view === "notes" ? "bill" : "notes"; renderPanel(); });
   $("#hSnd").addEventListener("click", () => { G.sound = !G.sound; if(G.sound) sfx.pen(); renderHUD(); });
+  setClock();
 }
-
+/* the session's days, with Maine's deadline at the end */
+function calendarStrip(){
+  const cells = DAYS.map((d, i) => {
+    const n = i + 1, num = d.date.split(" ")[1], cls = n < G.day ? "past" : n === G.day ? "now" : "";
+    return (d.dow === "Monday" && i ? `<i class="wk" aria-hidden="true"></i>` : "") + `<span class="cd ${cls}" title="${d.dow}, ${d.date}">${num}</span>`;
+  }).join("");
+  return `<div class="cal" aria-hidden="true">${cells}<span class="cd end" title="Saturday, March 4: Maine’s 90 days end">4</span></div>`;
+}
+/* the Car of History clock tells the time of day: 10 in the morning, 1 after one talk, 4 after two */
+function setClock(){
+  const H = document.getElementById("clockH"), M = document.getElementById("clockM"); if(!H) return;
+  const hours = (Math.min(G.day, TOTAL_DAYS) - 1) * 24 + [16, 13, 10][clamp(G.actions, 0, 2)];
+  const turns = G._clockHours === undefined ? 0 : hours - G._clockHours, dur = turns > 0 && !REDUCED ? Math.min(4, 0.6 + turns * 0.2) : 0;
+  G._clockHours = hours;
+  [H, M].forEach(el => { el.style.transitionDuration = dur + "s"; });
+  H.style.transform = `rotate(${hours * 30}deg)`; M.style.transform = `rotate(${hours * 360}deg)`;
+}
 /* ---------------- the passing of days ---------------- */
+/* a torn-off calendar page for the morning's news */
+function dayHead(d){
+  const [mon, num] = d.date.split(" ");
+  const page = `<svg class="calpg" viewBox="0 0 64 72" aria-hidden="true">
+    <rect x="4" y="8" width="56" height="60" rx="3" fill="#000" opacity=".18" transform="translate(2 3)"/>
+    <rect x="4" y="8" width="56" height="60" rx="3" fill="#fbf5e2" stroke="${INK}" stroke-width="2"/>
+    <path d="M4,25 V11 Q4,8 7,8 H57 Q60,8 60,11 V25 Z" fill="#a4302a" stroke="${INK}" stroke-width="2"/>
+    <text x="32" y="21" text-anchor="middle" font-family='${SERIF}' font-size="11" letter-spacing="1.5" fill="#fbf3dd">${mon.slice(0, 3).toUpperCase()}</text>
+    <text x="32" y="52" text-anchor="middle" font-family='${SERIF}' font-size="27" font-weight="700" fill="${INK}">${num}</text>
+    <text x="32" y="63" text-anchor="middle" font-family='${SERIF}' font-size="9" font-style="italic" fill="${INK}">1820</text>
+    <circle cx="18" cy="8" r="3" fill="#c9a03a" stroke="${INK}" stroke-width="1.4"/><circle cx="46" cy="8" r="3" fill="#c9a03a" stroke="${INK}" stroke-width="1.4"/></svg>`;
+  return `<div class="dayhead">${page}<h2>${d.dow}, ${d.date}</h2></div>`;
+}
 const MORNING = {
   3:"Rain on the Avenue. The mud is deep, and members complain in the lobby.",
   5:"A cold, clear morning. Someone\u2019s dog is loose in the rotunda.",
@@ -1983,7 +2140,7 @@ const MORNING = {
 };
 const EVENTS = {
   2:{text:"Mr. Randolph spoke for four hours yesterday against any line in the Purchase land. Half the Southern members cheered. The others checked their watches.", fx:m => { m.extra.H = Object.assign({}, m.extra.H, {LINE:-0.3}); }},
-  4:{text:"Boston\u2019s letter against spreading slavery is now in Northern newspapers. The cover-seekers are more nervous today.", fx:m => { m.extra.C = Object.assign({}, m.extra.C, {MO:-0.25}); }},
+  4:{text:"Boston\u2019s letter against spreading slavery is now in Northern newspapers. The cover-seekers are more nervous today.", fx:m => { m.extra.C = Object.assign({}, m.extra.C, {NORTH:-0.25}); }},
   6:{text:"Letters from the West describe the money crisis of 1819, called the Panic. Every Western member is thinking about land.", fx:m => { m.riderMult.W = 1.3; }},
   8:{text:"Massachusetts voted again. The 90 days stand. No one in Boston will give Maine more time.", fx:() => {}}
 };
@@ -2078,7 +2235,7 @@ function openPicker(artId){
   const groups = [["floor", "Already in the House"], ["idea", "New idea"], ["floated", "Ideas members are talking about"]];
   const draw = () => {
     const cost = billCost(G.bill);
-    const mapPart = artId === "ln" ? `<div class="mapbox" id="mapbox">${mapMarkup(G.bill.ln)}</div><p class="mapcap" id="mapcap">${esc(MAP_CAPTION[G.bill.ln])}</p><div class="explain"><b>How to read this map</b><p>${esc(LAT_HELP)}</p></div>` : "";
+    const mapPart = artId === "ln" ? `<div class="mapbox" id="mapbox">${mapMarkup(G.bill.ln)}</div><p class="mapcap" id="mapcap">${esc(MAP_CAPTION[G.bill.ln])}</p><details class="explain"><summary>How to read this map</summary><p>${esc(LAT_HELP)}</p></details>` : "";
     wrap.innerHTML = `<h3>Article ${A.roman}. ${A.title}</h3><p class="sub">${many ? `Each promise costs favors. You have ${START_FAVORS - cost} of ${START_FAVORS} left.` : artId === "ln" ? "Choose one line. The map shows what each one does." : "Choose one."}</p>` + mapPart +
       (many && G.bill.sw.includes("tariff_up") && G.bill.sw.includes("tariff_down") ? `<p class="tcaution">You promised both higher and lower tariffs. The leaders will compare notes.</p>` : "") +
       groups.map(([tag, title]) => {
@@ -2107,6 +2264,7 @@ function openPicker(artId){
     $("#pkDone", wrap).addEventListener("click", closePicker);
   };
   draw();
+  wrap.addEventListener("keydown", e => { if(e.key === "Escape"){ e.preventDefault(); closePicker(); const a = $(`.art[data-art="${artId}"]`); if(a) a.focus(); } });
   $("#panel").appendChild(wrap);
   wrap.scrollTop = 0;
   const first = $(".opt.on, .opt", wrap); if(first) first.focus({preventScroll:true});
@@ -2143,17 +2301,17 @@ function renderNotes(){
 /* ---------------- interviews ---------------- */
 function scaleState(bill){
   let free = 11, slave = 11;
-  if(bill.me !== "extend") free += 1;
+  free += 1;
   if(bill.me === "joined" || bill.me === "twin"){
     if(bill.mo === "silent" || bill.mo === "open") slave += 1;
     else if(bill.mo === "ban" || bill.mo === "tallmadge" || bill.mo === "gradual") free += 1;
   }
   return {free, slave};
 }
-function commitReads(bloc, reads){
+function commitReads(bloc, reads, bill){
   const rcs = {};
   Object.entries(reads).forEach(([rc, arr]) => { const m = {}; arr.forEach(x => m[x.id] = x.cat); rcs[rc] = m; });
-  G.reads[bloc] = {day:G.day, bill:cloneBill(G.bill), mods:JSON.parse(JSON.stringify(G.mods)), stale:false, rcs};
+  G.reads[bloc] = {day:G.day, bill:cloneBill(bill), mods:JSON.parse(JSON.stringify(G.mods)), stale:false, rcs};
 }
 function talkShell(capId){
   const C = CAST[capId];
@@ -2199,6 +2357,9 @@ async function playBubble(capId, b, hooks, isLast){
 async function runTalk(capId, bubbles, hooks){
   hooks = hooks || {};
   G.busy = true; G.view = "talk"; closePicker(); talkShell(capId);
+  // on a phone the panel sits below the stage: bring the conversation into view
+  const pt = $("#panel").getBoundingClientRect().top;
+  if(pt > innerHeight * 0.6 || pt < 0) $("#panel").scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"});
   for(let i = 0; i < bubbles.length; i++) await playBubble(capId, bubbles[i], hooks, i === bubbles.length - 1);
   if(hooks.commit){ hooks.commit(); renderStage(); }
   G.busy = false;
@@ -2218,12 +2379,14 @@ async function startTalk(capId){
   G.visits[capId] = (G.visits[capId] || 0) + 1; G.actionsUsed++;
   const rng = mulberry32(G.seed * 97 + G.day * 13 + G.actionsUsed * 101 + capId.length * 7);
   let comp, hooks = {};
-  const base = {cap:capId, bill:cloneBill(G.bill), mods:G.mods, members:G.members, visits:G.visits[capId], day:G.day, lastFail:G.lastFail, unlocked:G.unlocked, rng, favorsLeft:START_FAVORS - billCost(G.bill)};
+  // A committee holds no roll call, so the captains answer as if the bill came to a single vote.
+  const committee = !rollcalls(G.bill).length, bill = committee ? Object.assign(cloneBill(G.bill), {pr:"single"}) : cloneBill(G.bill);
+  const base = {cap:capId, bill, committee, mods:G.mods, members:G.members, visits:G.visits[capId], day:G.day, lastFail:G.lastFail, unlocked:G.unlocked, rng};
   if(capId === "thomas") comp = composeSenate(base);
   else {
-    const reads = readBloc(G.members, C.bloc, G.bill, G.mods, rng);
+    const reads = readBloc(G.members, C.bloc, bill, G.mods, rng);
     comp = composeHouse(Object.assign(base, {reads}));
-    hooks.commit = () => commitReads(C.bloc, reads);
+    hooks.commit = () => commitReads(C.bloc, reads, bill);
   }
   hooks.after = async () => {
     G.actions--; G.lastFail = false;
@@ -2245,14 +2408,14 @@ async function endDay(){
   if(res.over) return forcedVote();
   const d = DAYS[G.day - 1];
   renderHUD();
-  overlay(`<h2>${d.dow}, ${d.date}</h2><p>${res.notes.map(esc).join("</p><p>")}</p>${res.stale && res.stale.length ? `<p><b>News of your changes has spread.</b> These groups may have changed their minds: ${res.stale.map(esc).join(", ")}. Their members are back in their seats until you ask again.</p>` : ""}<div class="row"><button class="btn" id="mBegin">Begin the day</button></div>`);
+  overlay(`${dayHead(d)}<p>${res.notes.map(esc).join("</p><p>")}</p>${res.stale && res.stale.length ? `<p><b>News of your changes has spread.</b> These groups may have changed their minds: ${res.stale.map(esc).join(", ")}. Their members are back in their seats until you ask again.</p>` : ""}<div class="row"><button class="btn" id="mBegin">Begin the day</button></div>`);
   sfx.chime();
   await waitButton("mBegin"); closeOverlay();
   G.busy = false; renderAll();
 }
 async function forcedVote(){
   G.busy = true;
-  overlay(`<h2>Friday, March 3</h2><p>This is the last day. Massachusetts’s 90 days end tomorrow. There is no more time to count.</p><p>The Speaker stands. The clerk opens the book.</p><div class="row"><button class="btn" id="mGo">Call the roll</button></div>`);
+  overlay(`${dayHead(DAYS[TOTAL_DAYS - 1])}<p>This is the last day. Massachusetts’s 90 days end tomorrow. There is no more time to count.</p><p>The Speaker stands. The clerk opens the book.</p><div class="row"><button class="btn" id="mGo">Call the roll</button></div>`);
   sfx.low(); await waitButton("mGo"); closeOverlay();
   await doVote(true);
 }
@@ -2268,60 +2431,106 @@ async function confirmVote(){
   ac(); closePicker();
   const rcs = currentRcs(), unk = G.members.length - (G.tally ? G.tally.known : 0);
   const stale = staleVisible();
-  const days = TOTAL_DAYS - G.day;
-  overlay(`<h2>Call the vote?</h2><ul>${billSummaryList().map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-    ${rcs.length ? `<p class="small">${rcs.length > 1 ? "The House will hold " + rcs.length + " separate votes, in this order: " + rcs.map(r => r.short.toLowerCase()).join(", then ") + "." : "One question, one vote."} You know where ${G.members.length - unk} members stand. ${unk} are still unknown.${stale ? " Some counts are from earlier drafts." : ""}</p>` : `<p class="small">This is not a vote. It is a delay.</p>`}
-    <p class="small">If the vote fails, you lose two days. Members who voted no become harder to persuade. ${days} days remain after today.</p>
-    <div class="row"><button class="btn ghost" id="mNo">Not yet</button><button class="btn" id="mYes">${rcs.length ? "Call the roll" : "Do it"}</button></div>`);
+  const days = TOTAL_DAYS - G.day, left = days === 1 ? "1 day remains" : days + " days remain";
+  const RC_IN_SENTENCE = {LINE:"the line", MO:"Missouri", ME:"Maine", MEMO:"Maine and Missouri together", ALL:"the whole bill"};
+  let what, risk;
+  if(rcs.length){
+    what = `${rcs.length > 1 ? "The House will hold " + rcs.length + " separate votes, in this order: " + rcs.map(r => RC_IN_SENTENCE[r.id]).join(", then ") + "." : "One question, one vote."} You know where ${G.members.length - unk} members stand. ${unk} are still unknown.${stale ? " Some counts are from earlier drafts." : ""}`;
+    risk = G.day + FAIL_DAYS > TOTAL_DAYS ? `<b>This is your last chance.</b> If the vote fails, there is no time to try again.`
+      : `If the vote fails, you lose ${FAIL_DAYS} days, and members who voted no become harder to persuade. ${left} after today.`;
+  } else {
+    what = `A committee is not a vote. It will use up ${COMMITTEE_DAYS} days and settle nothing.`;
+    risk = G.day + COMMITTEE_DAYS > TOTAL_DAYS ? `<b>There is not enough time left.</b> Maine’s 90 days will run out while the committee meets.` : `${left} after today.`;
+  }
+  overlay(`<h2>${rcs.length ? "Call the vote?" : "Send the bill to a committee?"}</h2><ul>${billSummaryList().map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    <p class="small">${what}</p><p class="small">${risk}</p>
+    <div class="row"><button class="btn ghost" id="mNo">Not yet</button><button class="btn" id="mYes">${rcs.length ? "Call the roll" : "Send it"}</button></div>`);
   const yes = await Promise.race([waitButton("mYes").then(() => true), waitButton("mNo").then(() => false)]);
   closeOverlay();
   if(yes) doVote(false);
 }
-function countUp(a, n, ms){
+/* The clerk calls each name in turn. Each member answers and walks to the Aye or Nay pen,
+   and every counter on screen moves with them. */
+function rollUI(V){
+  $("#vbreak").innerHTML = BLOC_IDS.map(b => {
+    const pres = G.members.filter(m => m.bloc === b && V.att[m.id]).length;
+    return `<span class="bn"><i class="dot" style="background:${BLOCS[b].color}"></i>${SHORT_NAME[b]}</span><span class="bb" id="vbb_${b}" data-n="${pres}"><i class="ya"></i><i class="gap"></i><i class="na"></i></span><span class="bc" id="vbc_${b}">0\u20130</span>`;
+  }).join("");
+  $(".bignum .a").textContent = "0"; $(".bignum .n").textContent = "0";
+  $("#vrace .ya").style.width = "0"; $("#vrace .na").style.width = "0";
+  $("#vrace .nd").style.left = (V.need / V.present * 100).toFixed(2) + "%";
+  setPenCounts({"-2":0, "-1":0, "0":0, "1":0, "2":0});
+  $("#tally").innerHTML = `<div class="tnums"><span><i>The clerk is calling the roll\u2026</i></span><span>Need <b>${V.need}</b> of ${V.present}</span></div>`;
+}
+function rollCall(r, V, order, delays){
   return new Promise(res => {
-    if(FAST) ms = 40;
-    const A = $(".bignum .a"), N = $(".bignum .n"), t0 = performance.now();
-    let lastTick = 0;
+    const A = $(".bignum .a"), N = $(".bignum .n"), ya = $("#vrace .ya"), na = $("#vrace .na");
+    const bloc = {}; G.members.forEach(m => { bloc[m.id] = m.bloc; });
+    const rows = {}; BLOC_IDS.forEach(b => { const bb = $("#vbb_" + b); rows[b] = {a:0, n:0, size:+bb.dataset.n || 1, bb, bc:$("#vbc_" + b)}; });
+    const last = order.length ? delays[order[order.length - 1]] : 0, t0 = performance.now();
+    let k = 0, j = 0, ayes = 0, nays = 0, penA = 0, penN = 0;
     (function f(now){
-      const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 2.2);
-      const x = Math.round(a * e), y = Math.round(n * e);
-      A.textContent = x; N.textContent = y;
-      if(x + y !== lastTick && (x + y) % 4 === 0){ sfx.tick(); } lastTick = x + y;
-      if(k < 1) requestAnimationFrame(f); else { A.textContent = a; N.textContent = n; res(); }
+      const t = (now - t0) / 1000;
+      let changed = false;
+      while(k < order.length && delays[order[k]] <= t){
+        const id = order[k++], aye = !!r.votes[id], row = rows[bloc[id]];
+        if(aye){ ayes++; row.a++; } else { nays++; row.n++; }
+        row.bb.children[0].style.width = (row.a / row.size * 100) + "%"; row.bb.children[2].style.width = (row.n / row.size * 100) + "%";
+        row.bc.textContent = row.a + "\u2013" + row.n;
+        if(k % 3 === 0) sfx.tick();
+        changed = true;
+      }
+      while(j < order.length && delays[order[j]] + WALK_S <= t){ r.votes[order[j]] ? penA++ : penN++; j++; changed = true; }
+      if(changed){
+        A.textContent = ayes; N.textContent = nays;
+        ya.style.width = (ayes / V.present * 100) + "%"; na.style.width = (nays / V.present * 100) + "%";
+        setPenCounts({"-2":penN, "-1":0, "0":0, "1":0, "2":penA});
+      }
+      if(j < order.length || t < last + WALK_S) requestAnimationFrame(f); else res();
     })(t0);
   });
 }
 async function procedureDud(bill){
-  const committee = bill.pr === "committee";
-  const days = committee ? 2 : 3;
-  $("#panel").innerHTML = `<div class="voteview"><h2 class="panelh">${committee ? "A select committee" : "The vote is delayed"}</h2>
-    <p>${committee ? "The committee meets twice. It reports that it cannot agree. Mr. Taylor’s committee did the same in January. It took less than two weeks." : "The House delays the vote. The calendar does not wait."}</p>
-    <p class="sub">${days} days are gone.</p><button class="btn" id="vGo">Back to the table</button></div>`;
+  $("#panel").innerHTML = `<div class="voteview"><h2 class="panelh">A select committee</h2>
+    <p>The committee meets twice. It reports that it cannot agree. Mr. Taylor’s committee did the same in January. It took less than two weeks.</p>
+    <button class="btn" id="vGo">Back to the table</button></div>`;
   sfx.low(); await waitButton("vGo");
   bill.pr = "single"; G.bill.pr = "single";
-  await afterFailure({days, quiet:true});
+  await afterFailure({days:COMMITTEE_DAYS});
 }
 async function doVote(forced){
   G.busy = true; G.phase = "vote"; G.view = "vote"; closePicker();
+  // on a phone, show the stage and the count together
+  if(matchMedia("(max-width:1000px)").matches) scrollTo({top:0, behavior:REDUCED ? "auto" : "smooth"});
   const bill = cloneBill(G.bill);
-  if(bill.pr === "postpone" || bill.pr === "committee"){ G.phase = "play"; return procedureDud(bill); }
+  if(bill.pr === "committee"){ G.phase = "play"; return procedureDud(bill); }
   const rng = mulberry32(G.seed * 7919 + G.day * 31 + G.failed * 1009 + 5);
   const V = runVote(G.members, bill, G.mods, rng);
   const absent = {}; G.members.forEach(m => { if(!V.att[m.id]) absent[m.id] = true; });
   const n = V.results.length;
-  $("#panel").innerHTML = `<div class="voteview"><h2 class="panelh">The clerk calls the roll</h2><div class="rcname" id="rcname"></div><div class="bignum"><span class="a">0</span> \u2013 <span class="n">0</span></div><div class="needline" id="needline"></div><div class="verdict" id="verdict"></div><button class="btn" id="vNext" disabled>Continue</button></div>`;
-  sfx.gavel(); await sleep(800);
+  $("#panel").innerHTML = `<div class="voteview"><h2 class="panelh">The clerk calls the roll</h2><div class="rcname" id="rcname"></div>
+    <div class="bignum"><span class="a">0</span> \u2013 <span class="n">0</span></div>
+    <div class="vrace" id="vrace" role="presentation"><i class="ya"></i><i class="na"></i><i class="nd"></i></div>
+    <div class="needline" id="needline"></div><div class="verdict" id="verdict" aria-live="polite"></div>
+    <div class="vbreak" id="vbreak" aria-label="How each group voted"></div><button class="btn" id="vNext" disabled>Continue</button></div>`;
+  sfx.gavel();
   let housePass = true;
   for(let i = 0; i < n; i++){
     const r = V.results[i];
     $("#rcname").textContent = (n > 1 ? "Question " + (i + 1) + " of " + n + ": " : "") + r.name;
     $("#needline").textContent = V.present < G.members.length ? V.need + " needed of " + V.present + " present" : V.need + " needed of " + V.present;
     $("#verdict").textContent = ""; $("#verdict").className = "verdict"; $("#vNext").disabled = true;
+    // everyone takes their seat, then the clerk calls the names
     G.rc = r.id; G.exact[r.id] = {sig:billSig(bill), cats:{}};
+    renderStage({absent, hold:true}); rollUI(V);
+    await sleep(1000);
+    const order = shuffleInPlace(G.members.filter(m => V.att[m.id]).map(m => m.id), mulberry32(G.seed * 13 + G.day * 7 + i * 131 + G.failed));
+    const dur = FAST ? 0.2 : ROLL_S, delays = {};
+    order.forEach((id, k) => { delays[id] = k / Math.max(1, order.length - 1) * dur; });
     G.members.forEach(m => { if(V.att[m.id]) G.exact[r.id].cats[m.id] = r.votes[m.id] ? 2 : -2; });
-    renderStage({absent});
-    await sleep(500);
-    await countUp(r.aye, r.nay, 2600);
+    renderStage({absent, delays, hold:true});
+    await rollCall(r, V, order, delays);
+    setPenCounts(G.tally.cnt); renderTally();
     $("#verdict").textContent = r.pass ? "Passed." : "Failed.";
     $("#verdict").className = "verdict " + (r.pass ? "pass" : "fail");
     (r.pass ? sfx.chime : sfx.low)();
@@ -2343,8 +2552,8 @@ async function doVote(forced){
   }
   const ok = housePass && result.senate;
   if(ok) return showEpilogue(true, result);
-  if(forced || G.day + 2 > TOTAL_DAYS) return showEpilogue(false, result);
-  return afterFailure({days:2, result});
+  if(forced || G.day + FAIL_DAYS > TOTAL_DAYS) return showEpilogue(false, result);
+  return afterFailure({days:FAIL_DAYS, result});
 }
 function senateWord(bill, ok){
   if(ok) return bill.me === "twin" ? ["Both bills are on the desk together. The Senate agrees. Twelve and twelve. Everyone can breathe.", "warm"] : ["The Senate agrees. I expected more shouting.", "amused"];
@@ -2354,8 +2563,8 @@ function senateWord(bill, ok){
   return ["A few seats were empty, and a few men changed their minds in the hall. The Senate said no. I am sorry, Mr. Speaker.", "worried"];
 }
 async function afterFailure(o){
-  // The House said no: two days gone, everyone remembers.
-  const bill = G.bill, res = o.result;
+  // A failed vote or a wasted committee: days gone, everyone remembers.
+  const bill = G.bill, res = o.result, hardened = [];
   G.failed++; G.lastFail = true;
   if(res){
     const main = res.V.results.find(r => !r.pass);
@@ -2363,11 +2572,11 @@ async function afterFailure(o){
       BLOC_IDS.forEach(b => {
         const mem = G.members.filter(m => m.bloc === b && res.V.att[m.id]);
         const nay = mem.filter(m => !main.votes[m.id]).length;
-        if(mem.length && nay / mem.length > 0.6) G.mods.hard[b] = Math.max(-0.75, (G.mods.hard[b] || 0) - 0.25);
+        if(mem.length && nay / mem.length > 0.6){ G.mods.hard[b] = Math.max(-0.75, (G.mods.hard[b] || 0) - 0.25); hardened.push(BLOCS[b].name); }
       });
     }
-    Object.values(G.reads).forEach(r => r.stale = true);
-  } else Object.values(G.reads).forEach(r => { r.stale = true; });
+  }
+  Object.values(G.reads).forEach(r => { r.stale = true; });
   const adv = advanceDays(o.days);
   if(adv.over) return showEpilogue(false, res || {bill, V:{results:[]}, housePass:false, senate:null});
   G.phase = "play"; G.busy = false; G.view = "bill"; G.rc = null;
@@ -2375,7 +2584,7 @@ async function afterFailure(o){
   const detail = res ? (!res.housePass ? "The House said no." : "The Senate said no.") : "";
   const recorded = res ? (!res.housePass ? "Every member’s vote is now public. You can see where each one stood." : "The House vote is public. You can see where each member stood.") : "";
   renderHUD();
-  overlay(`<h2>${d.dow}, ${d.date}</h2>${detail ? `<p><b>${detail}</b> ${recorded}</p>` : ""}<p>${o.days} days are gone. ${adv.notes.map(esc).join(" ")}</p><p>The members who voted no are now more set in their view.</p><div class="row"><button class="btn" id="mBack">Back to the table</button></div>`);
+  overlay(`${dayHead(d)}${detail ? `<p><b>${detail}</b> ${recorded}</p>` : ""}<p>${o.days} days are gone. ${adv.notes.map(esc).join(" ")}</p>${hardened.length ? `<p>These groups voted no, and they are now harder to move: ${hardened.map(esc).join(", ")}.</p>` : ""}<div class="row"><button class="btn" id="mBack">Back to the table</button></div>`);
   sfx.low(); await waitButton("mBack"); closeOverlay();
   renderAll();
 }
@@ -2437,25 +2646,15 @@ const GLOSSARY = [
   ["36°30′","A line of latitude, 36½ degrees north. It runs along Missouri’s southern border. Today it is also the Kentucky–Tennessee border."],
   ["40°","A line of latitude, 40 degrees north. Today it is the border between Kansas and Nebraska."]
 ];
-function epilogueText(pass, res){
-  const b = res.bill, V = res.V, rcs = V.results || [];
+function epilogueText(res){
+  const rcs = res.V.results || [];
   const rcLine = r => `${r.name}: ${r.aye} to ${r.nay}, ${r.pass ? "passed" : "failed"}`;
   const hist = `<p class="small"><b>What actually happened.</b> On March 2, the House voted 90 to 87 to admit Missouri with no limit on slavery. It voted 134 to 42 to ban slavery north of 36°30′. Maine’s bill was signed on March 3, and Missouri’s on March 6. A small committee from both chambers had split them into two bills so the House would accept them.</p>`;
-  if(pass){
-    const debts = billKeys(b).filter(k => DEBTS[k]).map(k => DEBTS[k]);
-    const uniqueFriends = FRIENDS.filter(f => f.earned(b)).map(f => f.name);
-    return {stamp:"The Compromise of 1820", body:`<p>Maine will join the Union as a free state. Missouri may write its constitution and join with no limit on slavery. ${b.ln === "3630" ? "Slavery is banned north of 36°30′ in the rest of the Louisiana Purchase." : b.ln === "none" ? "The bill says nothing about the rest of the Louisiana Purchase." : "A line with limits has been drawn across the Purchase land."}</p>
-      <p class="small">${rcs.map(rcLine).join(". ")}.${res.senate ? " The Senate agreed." : ""}</p>
-      <p>${b.pr === "divide" || b.pr === "late" ? "" : ""}${b.pr === "divide" ? "No member voted for the whole Compromise. Each voted for one piece, and that was enough." : ""}</p>
-      <div class="grid2"><div class="box"><b>Promises you must keep</b>${debts.length ? "<ul>" + debts.slice(0, 5).map(d => `<li>${esc(d)}</li>`).join("") + "</ul>" : "None that you can name."}</div>
-      <div class="box"><b>Friends made</b>${uniqueFriends.length ? uniqueFriends.map(esc).join(", ") + ". They will remember who wrote the bill, in 1824 and later." : "None who will say so."}<br><span class="small">Favors spent: ${billCost(b)} of ${START_FAVORS}. Days used: ${Math.min(G.day, TOTAL_DAYS)} of ${TOTAL_DAYS}.</span></div></div>${hist}
-      <p class="small">Next winter, Missouri will send its constitution to Washington. Someone will have to read it.</p>`};
-  }
   let why = "";
-  if(!res.housePass) why = "The House would not pass it. " + rcs.filter(r => !r.pass).map(rcLine).join(". ") + ".";
+  if(!res.housePass && rcs.length) why = "The House would not pass it. " + rcs.filter(r => !r.pass).map(rcLine).join(". ") + ".";
   else if(res.senate === false) why = "The House passed it, but the Senate would not. The bill died between the two chambers.";
   else why = "Time ran out before the House could pass anything.";
-  return {stamp:"March 4 comes", lost:true, body:`<p>${why}</p><p>Maine’s 90 days ended at midnight. Missouri is still waiting. In Boston, people are calling another meeting. In the boardinghouses, members are already counting votes for next winter.</p>${hist}<p class="small">You can start over and try a different bill.</p>`};
+  return {stamp:"March 4 comes", body:`<p>${why}</p><p>Maine’s 90 days ended at midnight. Missouri is still waiting. In Boston, people are calling another meeting. In the boardinghouses, members are already counting votes for next winter.</p>${hist}<p class="small">You can start over and try a different bill.</p>`};
 }
 async function showEpilogue(pass, res){
   G.phase = "over"; G.busy = true; closePicker();
@@ -2465,7 +2664,7 @@ async function showEpilogue(pass, res){
     if(!params.get("nocine")) await playCinema("victory", cinemaData(result, res));
     return showDebrief(result, res);
   }
-  const E = epilogueText(false, res);
+  const E = epilogueText(res);
   overlay(`<div class="epi"><h2>The Compromise of 1820</h2><div class="stamp lost">${E.stamp}</div>${E.body}<div class="row"><button class="btn" id="eAgain">Try again</button></div></div>`);
   sfx.low();
   $("#eAgain").addEventListener("click", () => { location.href = replayUrl(); });
@@ -2538,7 +2737,7 @@ const DEBRIEF_Q = [
 
 function debriefHTML(result, res){
   const b = result.bill, house = result.house;
-  const nameOf = id => ({ALL:"The whole bill", LINE:"The line at 36°30′", MO:"Missouri", ME:"Maine", MEMO:"Maine and Missouri"})[id] || id;
+  const nameOf = id => ({ALL:"The whole bill", LINE:LINE_NAME[b.ln] || "The line", MO:"Missouri", ME:"Maine", MEMO:"Maine and Missouri"})[id] || id;
   const find = ids => house.find(r => ids.includes(r.id));
   const fmt = r => r ? `${r.aye} to ${r.nay}` : "Not a separate vote";
   const rows = house.map(r => `<tr><td>${esc(nameOf(r.id))}</td><td>${r.aye} to ${r.nay}</td><td>${r.pass ? "Passed" : "Failed"}</td></tr>`).join("");
@@ -2547,7 +2746,7 @@ function debriefHTML(result, res){
   const meLabel = (optById("me", b.me) || {}).label || "";
   const compare = [
     ["Missouri admitted with no limit on slavery", "90 to 87", fmt(find(["MO", "MEMO", "ALL"]))],
-    ["Slavery banned north of 36°30′", "134 to 42", b.ln === "none" ? "No line in your bill" : fmt(find(["LINE", "ALL"]))],
+    ["Slavery banned north of 36°30′", "134 to 42", b.ln === "none" ? "No line in your bill" : fmt(find(["LINE", "ALL"])) + (b.ln === "3630" ? "" : " (" + LINE_NAME[b.ln].toLowerCase() + ")")],
     ["Maine admitted as a free state", "Signed March 3", fmt(find(["ME", "MEMO", "ALL"]))],
     ["How Maine and Missouri were handled", "Two bills, sent together", meLabel],
     ["Time it took", "Weeks of debate. Missouri’s bill was signed March 6.", result.day + " of " + TOTAL_DAYS + " days"]
